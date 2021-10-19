@@ -1,1 +1,122 @@
-<p>agregar-editar-producto works!</p>
+<div class="card text-center">
+    <div class="card-header">
+        Producto
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">{{ tituloProducto}}</h5>
+
+        <form [formGroup]="formProducto" (ngSubmit)="onSubmit()">
+
+            <div class="row p-2">
+                <div class="col-12">
+                    <div class="form-group">
+
+                        <input type="text" class="form-control" formControlName="nombreProducto"
+                            placeholder="Ingrese el nombre del producto" required minlength="5">
+
+                        <div *ngIf="formProducto.get('nombreProducto')?.invalid && 
+                        (formProducto.get('nombreProducto')?.dirty || 
+                        formProducto.get('nombreProducto')?.touched)" class="alert alert-danger">
+                            <div *ngIf="formProducto.get('nombreProducto')?.errors?.required">
+                                El nombre del producto es requerido
+                            </div>
+                            <div *ngIf="formProducto.get('nombreProducto')?.errors?.minlength">
+                                El minimo de caracteres es de 5
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="row p-2">
+                <div class="col-12">
+                    <div class="form-group">
+        
+                          <input type="text" class="form-control" formControlName="precioProducto"
+                            placeholder="Ingrese el precio" required  [pattern]="soloNumeros">
+
+                            <div *ngIf="formProducto.get('precioProducto')?.invalid && 
+                            (formProducto.get('precioProducto')?.dirty || 
+                            formProducto.get('precioProducto')?.touched)" class="alert alert-danger">
+                                <div *ngIf="formProducto.get('precioProducto')?.errors?.required">
+                                    El precio del producto es requerido
+                                </div>
+                                <div *ngIf="formProducto.get('precioProducto')?.errors?.pattern">
+                                    Ingrese solo numeros
+                                </div>
+
+                            </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="row p-2">
+                <div class="col-12">
+                    <div class="form-group">
+                    
+                            <label for="exampleFormControlTextarea1">Descripcion del producto</label>
+                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"
+                            formControlName="descripcionProducto"
+                            placeholder="Ingrese la descripcion"
+                            ></textarea>
+                            <div *ngIf="formProducto.get('descripcionProducto')?.invalid && 
+                            (formProducto.get('descripcionProducto')?.dirty || 
+                            formProducto.get('descripcionProducto')?.touched)" class="alert alert-danger">
+                            
+                            </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="row p-2">
+                <div class="col-12">
+                    <div class="form-group">
+                        <input type="text" class="form-control" required 
+                        formControlName="kiloProducto" placeholder="Ingrese los kilos del producto"
+                        [pattern]="soloNumeros">
+                        <div *ngIf="formProducto.get('kiloProducto')?.invalid && 
+                        (formProducto.get('kiloProducto')?.dirty || 
+                        formProducto.get('kiloProducto')?.touched)" class="alert alert-danger">
+                            <div *ngIf="formProducto.get('kiloProducto')?.errors?.required">
+                                Ingrese los kilos
+                            </div>
+                            <div *ngIf="formProducto.get('kiloProducto')?.errors?.pattern">
+                                Ingrese solo numeros
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-12">
+                    <button type="submit" class="btn btn-primary" [disabled]="!formProducto.valid">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div class="grid" *ngIf="mostrarMensjae">
+    <div class="mensaje">
+      {{ mensaje }}
+    </div>
+    <div class="item-cerrar">
+        <button class="cerrar" (click)="cerrar();">X</button>
+     </div>
+</div>
+
+<div class="overlay" *ngIf="load">
+   
+    <div class="spinner ">
+        <img [src]="['./assets/giphy.gif']"/>
+      </div>
+     
+    </div>
