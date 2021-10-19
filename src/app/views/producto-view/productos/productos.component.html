@@ -1,0 +1,14 @@
+
+
+<div class="row p-4" >
+    <div class="col-6">
+        <button class="btn btn-success" [disabled]='mostrarProducto' (click)="agregarProducto();">agregar</button>
+    </div>
+    <div class="col-6 d-flex justify-content-end">
+        <button class="btn btn-info" [disabled]='!mostrarProducto' (click)="cancelarProducto();">cancelar</button>
+    </div>
+</div>
+<app-agregar-editar-producto *ngIf="mostrarProducto" [productoAgregarEditar]='editarAgregar'
+[tituloEditar]='enviarTitulo'></app-agregar-editar-producto>
+
+<app-mostrar-producto *ngIf="!mostrarProducto" [datosProducto$]='productos$' ></app-mostrar-producto>

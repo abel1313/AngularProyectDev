@@ -1,0 +1,60 @@
+<form [formGroup]='formPersonaCliente'>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="form-group">
+                <label for="nombrePersona">Ingrese el nombre</label>
+                <input type="text" class="form-control" required formControlName="nombrePersona" minlength="5"
+                    id="nombrePersona" placeholder="Ingrese">
+
+                <div *ngIf="formPersonaCliente.get('nombrePersona')?.invalid && 
+                (formPersonaCliente.get('nombrePersona')?.dirty || 
+                formPersonaCliente.get('nombrePersona')?.touched)" class="alert">
+
+                    <div *ngIf="formPersonaCliente.get('nombrePersona')?.errors?.required">
+                        Name is required.
+                    </div>
+              
+                
+
+                </div>
+
+
+
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="form-group">
+                <label for="paternoPersona">Ingrese apeido paterno</label>
+                <input type="text" class="form-control" required minlength="5" id="paternoPersona"
+                    placeholder="Ingrese">
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-12">
+            <div class="form-group">
+                <label for="paternoMaterno">Ingrese apeido materno</label>
+                <input type="text" class="form-control" required minlength="5" id="paternoMaterno"
+                    placeholder="Ingrese">
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-12">
+            <div class="form-group">
+                <label for="genero">Ingrese el genero</label>
+                <input type="text" class="form-control" required minlength="5" id="genero" placeholder="Ingrese">
+            </div>
+        </div>
+    </div>
+
+
+</form>

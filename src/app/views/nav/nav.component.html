@@ -1,0 +1,28 @@
+<ul ngbNav #nav="ngbNav" [activeId]="2" class="nav-tabs justify-content-center">
+  <li ngbDropdown class="nav-item">
+    <a href (click)="false" class="nav-link" ngbDropdownToggle >Clientes</a>
+    <div ngbDropdownMenu>
+      <button ngbDropdownItem [routerLink]="[ '/clientes']" >Nuevo</button>
+      <button ngbDropdownItem>Mostrar</button>
+    </div>
+  </li>
+
+  <li ngbDropdown class="nav-item">
+    <a href (click)="false" class="nav-link" ngbDropdownToggle>Usuarios</a>
+    <div ngbDropdownMenu>
+      <button ngbDropdownItem>Nuevo</button>
+      <button ngbDropdownItem>Mostrar</button>
+    </div>
+  </li>
+
+    <li ngbDropdown class="nav-item">
+      <a href (click)="false" class="nav-link" ngbDropdownToggle>productos</a>
+      <div ngbDropdownMenu>
+        <button ngbDropdownItem [routerLink]="[ '/productos'] ">productos</button>
+        
+      </div>
+    </li>
+
+  </ul>
+  
+  <div [ngbNavOutlet]="nav" class="mt-2"></div>
