@@ -23,7 +23,7 @@ export class ServicesGenericosService {
     return this.http.get<R[]>(`${this.url}/${url}`);
   }
   eliminar<R>( id: number,url: string): Observable<R>{
-    console.log(id, url);
+    
     
      return this.http.delete<R>(`${this.url}/${url}/${id}`);
   }

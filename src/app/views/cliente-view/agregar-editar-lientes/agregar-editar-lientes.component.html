@@ -3,7 +3,102 @@
  
 
 
+<mat-slider min="1" max="100" step="1" value="50">dasasd</mat-slider>
 
+
+<div class="cont-ejemplo">
+  <div class="hijo">1</div>
+  <div class="hijo">1</div>
+</div>
+
+<button mat-raised-button (click)="isLinear = !isLinear" id="toggle-linear">
+  {{!isLinear ? 'Enable linear mode' : 'Disable linear mode'}}
+</button>
+<mat-stepper [linear]="isLinear" #stepper>
+  <mat-step [stepControl]="datosPersonaFormGroup">
+    <form [formGroup]="datosPersonaFormGroup">
+
+<div class="container-material">
+
+  <div class="item-material">
+    <ng-template matStepLabel>Ingrese su nombre</ng-template>
+    <mat-form-field appearance="fill">
+      <mat-label>Nombre</mat-label>
+      <input matInput placeholder="Ingrese su nombre" formControlName="nombrePersona" required>
+    </mat-form-field>
+  </div>
+
+  <div class="item-material">
+    <ng-template matStepLabel>Ingrese su apeido paterno</ng-template>
+    <mat-form-field appearance="fill">
+      <mat-label>Ingrese su apeido paterno</mat-label>
+      <input matInput placeholder="Ingrese su apeido paterno" formControlName="apeidoPaternoPersona" required>
+    </mat-form-field>
+  </div>
+
+  <div class="item-material">
+    <ng-template matStepLabel>Ingrese su apeido materno</ng-template>
+    <mat-form-field appearance="fill">
+      <mat-label>Ingrese su apeido materno</mat-label>
+      <input matInput placeholder="Ingrese su apeido materno" formControlName="apeidoMaternoPersona" required>
+    </mat-form-field>
+  </div>
+  <div class="item-material">
+    <ng-template matStepLabel>Ingrese su genero</ng-template>
+    <mat-form-field appearance="fill">
+      <mat-label>Ingrese su genero</mat-label>
+      <input matInput placeholder="Ingrese su genero" formControlName="generoPersona" required>
+    </mat-form-field>
+  </div>
+
+  <div class="item-date">
+    <mat-form-field class="example-full-width" appearance="fill">
+      <mat-label>Elija una fecha</mat-label>
+      <input matInput [matDatepicker]="picker">
+      <mat-datepicker-toggle matSuffix [for]="picker">
+        <mat-icon matDatepickerToggleIcon>Precione aqui</mat-icon>
+      </mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+  </div>
+
+
+
+
+
+
+
+</div>
+
+
+
+      <div>
+        <button mat-button matStepperNext [disabled]="datosPersonaFormGroup.invalid" >Siguiente</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step [stepControl]="datosDireccionFormGroup" label="Datos de la direccion" >
+    <form [formGroup]="datosDireccionFormGroup">
+      <mat-form-field appearance="fill">
+        <mat-label>Address</mat-label>
+        <input matInput formControlName="secondCtrl" placeholder="Ex. 1 Main St, New York, NY"
+               required>
+      </mat-form-field>
+      <div>
+        <button mat-button matStepperPrevious>Back</button>
+        <button mat-button matStepperNext [disabled]='datosDireccionFormGroup.invalid'>Siguiente</button>
+      </div>
+    </form>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>Finalizar</ng-template>
+    <p>Dar click terminar</p>
+    <div>
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button (click)="stepper.reset()" [disabled]=' datosPersonaFormGroup.invalid && datosDireccionFormGroup.invalid'>Terminar</button>
+    </div>
+  </mat-step>
+</mat-stepper>
 
  <form [formGroup]='formCliente'(ngSubmit)='guardar()'>
     <div class="row">
