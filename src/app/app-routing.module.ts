@@ -27,6 +27,11 @@ const routes: Routes =
     path: 'eliminar',
     loadChildren: () => import('../app/views/eliminar/eliminar.module')
     .then(usuario => usuario.EliminarModule)
+  },
+  {
+    path: 'graficas',
+    loadChildren: () => import('../app/views/graficas/graficas.module')
+    .then(usuario => usuario.GraficasModule)
   }
 ];
 
