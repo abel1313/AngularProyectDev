@@ -11,12 +11,15 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
+import {MatSelectModule} from '@angular/material/select';
+import { PipeFechaPipe } from './pipe-fecha.pipe';
 
 
 
 @NgModule({
   declarations: [ 
     
+    PipeFechaPipe
   ],
   imports: [
     CommonModule,
@@ -29,7 +32,8 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatFormFieldModule,
     MatInputModule,
     MatDatepickerModule,
-    MatNativeDateModule 
+    MatNativeDateModule,
+    MatSelectModule
     
     
     
@@ -45,6 +49,8 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatInputModule,
     MatDatepickerModule,
     MatNativeDateModule,
+    MatSelectModule,
+    PipeFechaPipe
     
     
     

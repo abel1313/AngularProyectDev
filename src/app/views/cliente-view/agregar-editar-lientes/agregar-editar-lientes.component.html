@@ -1,120 +1,408 @@
+{{ fecha | pipeFecha }}
+<form [formGroup]='datosClienteFormGroup'(ngSubmit)='guardar()' *ngIf="!mostrarFormularios">
 
+  <div class="row">
+    <div class="col-8 offset-2">
+      <div class="card">
+        <div class="card-header"> <h2 class="card-title text-center"> {{ tituloCliente }} </h2> </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-12">
+              <div class="form-group">
+                <input type="text" class="form-control text-center" 
+                placeholder="Ingrese su nombre" 
+                formControlName="nombrePersona"
+                name="nombrePersona" id="nombrePersona" required 
+                [pattern]="soloLetras" minlength="3" maxlength="10">
+              </div>
+              <div *ngIf="datosClienteFormGroup.get('nombrePersona')?.invalid && 
+              (datosClienteFormGroup.get('nombrePersona')?.dirty || 
+              datosClienteFormGroup.get('nombrePersona')?.touched)">
 
-<button mat-raised-button (click)="isLinear = !isLinear" id="toggle-linear">
-  {{!isLinear ? 'Enable linear mode' : 'Disable linear mode'}}
-</button>
-<mat-stepper [linear]="isLinear" #stepper>
-  <mat-step [stepControl]="datosPersonaFormGroup">
-    <form [formGroup]="datosPersonaFormGroup">
-
-<div class="container-material">
-
-  <div class="item-material">
-    <ng-template matStepLabel>Ingrese su nombre</ng-template>
-    <mat-form-field appearance="fill">
-      <mat-label>Nombre</mat-label>
-      <input matInput placeholder="Ingrese su nombre" formControlName="nombrePersona" required>
-    </mat-form-field>
-  </div>
-
-  <div class="item-material">
-    <ng-template matStepLabel>Ingrese su apeido paterno</ng-template>
-    <mat-form-field appearance="fill">
-      <mat-label>Ingrese su apeido paterno</mat-label>
-      <input matInput placeholder="Ingrese su apeido paterno" formControlName="apeidoPaternoPersona" required>
-    </mat-form-field>
-  </div>
-
-  <div class="item-material">
-    <ng-template matStepLabel>Ingrese su apeido materno</ng-template>
-    <mat-form-field appearance="fill">
-      <mat-label>Ingrese su apeido materno</mat-label>
-      <input matInput placeholder="Ingrese su apeido materno" formControlName="apeidoMaternoPersona" required>
-    </mat-form-field>
-  </div>
-  <div class="item-material">
-    <ng-template matStepLabel>Ingrese su genero</ng-template>
-    <mat-form-field appearance="fill">
-      <mat-label>Ingrese su genero</mat-label>
-      <input matInput placeholder="Ingrese su genero" formControlName="generoPersona" required>
-    </mat-form-field>
-  </div>
-
-  <div class="item-date">
-    <mat-form-field class="example-full-width" appearance="fill">
-      <mat-label>Elija una fecha</mat-label>
-      <input matInput [matDatepicker]="picker">
-      <mat-datepicker-toggle matSuffix [for]="picker">
-        <mat-icon matDatepickerToggleIcon>Precione aqui</mat-icon>
-      </mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
-    </mat-form-field>
-  </div>
-
-
-
-
-
-
-
-</div>
-
-
-
-      <div>
-        <button mat-button matStepperNext [disabled]="datosPersonaFormGroup.invalid" >Siguiente</button>
-      </div>
-    </form>
-  </mat-step>
-  <mat-step [stepControl]="datosDireccionFormGroup" label="Datos de la direccion" >
-    <form [formGroup]="datosDireccionFormGroup">
-      <mat-form-field appearance="fill">
-        <mat-label>Address</mat-label>
-        <input matInput formControlName="secondCtrl" placeholder="Ex. 1 Main St, New York, NY"
-               required>
-      </mat-form-field>
-      <div>
-        <button mat-button matStepperPrevious>Back</button>
-        <button mat-button matStepperNext [disabled]='datosDireccionFormGroup.invalid'>Siguiente</button>
-      </div>
-    </form>
-  </mat-step>
-  <mat-step>
-    <ng-template matStepLabel>Finalizar</ng-template>
-    <p>Dar click terminar</p>
-    <div>
-      <button mat-button matStepperPrevious>Back</button>
-      <button mat-button (click)="stepper.reset()" [disabled]=' datosPersonaFormGroup.invalid && datosDireccionFormGroup.invalid'>Terminar</button>
-    </div>
-  </mat-step>
-</mat-stepper>
-
- <form [formGroup]='formCliente'(ngSubmit)='guardar()'>
-    <div class="row">
-        <div class="col-8 offset-2" >
-            <div class="card">
-                <div class="card-header"> <h2 class="card-title text-center"> Cliente </h2> </div>
-    
-                <div class="card-body">
-    
-                    <app-datos-persona>
-                    </app-datos-persona>
-                    <div class="row mt-2">
-                        <div class="col-6 d-flex justify-content-center">
-                            <button class="btn btn-danger">Cancelar</button>
-                        </div>
-                        <div class="col-6 d-flex justify-content-center">
-                            <button class="btn btn-secondary" [disabled]='formCliente.invalid' type="submit">Siguiente</button>
-                        </div>
-                    </div>
-    
+                  <div class="text-center" 
+                  *ngIf="datosClienteFormGroup.get('nombrePersona')?.errors?.required">
+                      El nombre es requerido.
+                  </div>
+                  <div class="text-center" 
+                  *ngIf="datosClienteFormGroup.get('nombrePersona')?.errors?.pattern">
+                    Ingrese solo letras.
                 </div>
+
+                <div class="text-center" 
+                *ngIf="datosClienteFormGroup.get('nombrePersona')?.errors?.minLength">
+                  Em mínimo de caracteres es de 3.
+              </div>
+
+              <div class="text-center" 
+              *ngIf="datosClienteFormGroup.get('nombrePersona')?.errors?.maxLength">
+                El maximo de caracteres es de 10.
             </div>
+
+              </div>
+            </div>
+          </div>
+
+          <div class="row mt-2">
+            <div class="col-12">
+              <div class="form-group">
+                <input type="text" class="form-control text-center" 
+                placeholder="Ingrese su apeido paterno" 
+                formControlName="apeidoPaternoPersona"
+                name="" id="" required 
+                [pattern]="soloLetras" minlength="3" maxlength="10">
+              </div>
+              <div *ngIf="datosClienteFormGroup.get('apeidoPaternoPersona')?.invalid && 
+              (datosClienteFormGroup.get('apeidoPaternoPersona')?.dirty || 
+              datosClienteFormGroup.get('apeidoPaternoPersona')?.touched)">
+
+                  <div class="text-center" *ngIf="datosClienteFormGroup.get('apeidoPaternoPersona')?.errors?.required">
+                      El apeido paterno es requerido.
+                  </div>
+
+                  <div class="text-center" 
+                  *ngIf="datosClienteFormGroup.get('apeidoPaternoPersona')?.errors?.pattern">
+                    Ingrese solo letras.
+                </div>
+
+                <div class="text-center" 
+                *ngIf="datosClienteFormGroup.get('apeidoPaternoPersona')?.errors?.minLength">
+                  Em mínimo de caracteres es de 3.
+              </div>
+
+              <div class="text-center" 
+              *ngIf="datosClienteFormGroup.get('apeidoPaternoPersona')?.errors?.maxLength">
+                El maximo de caracteres es de 10.
+            </div>
+
+
+                 
+              </div>
+            </div>
+          </div>
+
+          
+          <div class="row mt-2">
+            <div class="col-12">
+              <div class="form-group">
+                <input type="text" class="form-control text-center" 
+                placeholder="Ingrese su apeido materno" 
+                formControlName="apeidoMaternoPersona"
+                name="" id="" required
+                [pattern]="soloLetras" minlength="3" maxlength="10">
+              </div>
+              <div *ngIf="datosClienteFormGroup.get('apeidoMaternoPersona')?.invalid && 
+              (datosClienteFormGroup.get('apeidoMaternoPersona')?.dirty || 
+              datosClienteFormGroup.get('apeidoMaternoPersona')?.touched)">
+
+                  <div class="text-center" *ngIf="datosClienteFormGroup.get('apeidoMaternoPersona')?.errors?.required">
+                      El apeido materno es requerido.
+                  </div>
+
+                  <div class="text-center" 
+                  *ngIf="datosClienteFormGroup.get('apeidoMaternoPersona')?.errors?.pattern">
+                    Ingrese solo letras.
+                </div>
+
+                <div class="text-center" 
+                *ngIf="datosClienteFormGroup.get('apeidoMaternoPersona')?.errors?.minLength">
+                  Em mínimo de caracteres es de 3.
+              </div>
+
+              <div class="text-center" 
+              *ngIf="datosClienteFormGroup.get('apeidoMaternoPersona')?.errors?.maxLength">
+                El maximo de caracteres es de 10.
+            </div>
+
+
+
+
+              </div>
+            </div>
+          </div>
+
+
+          <div class="row mt-2">
+            <div class="col-6">
+              <div class="form-group">
+                <mat-form-field appearance="fill" class="example-form-field">
+                  <mat-label>Ingrese su fecha de nacimiento</mat-label>
+                  <input matInput [matDatepicker]="datepicker"
+                  formControlName="fechaNacimiento" required  
+                  >
+
+                  <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
+                  <mat-datepicker #datepicker>
+                    <mat-datepicker-actions>
+                      <button mat-button matDatepickerCancel>Cancelar</button>
+                      <button mat-raised-button color="primary" matDatepickerApply>Aceptar</button>
+                    </mat-datepicker-actions>
+                  </mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div *ngIf="datosClienteFormGroup.get('fechaNacimiento')?.invalid && 
+              (datosClienteFormGroup.get('fechaNacimiento')?.dirty || 
+              datosClienteFormGroup.get('fechaNacimiento')?.touched)">
+
+                  <div class="text-center" *ngIf="datosClienteFormGroup.get('fechaNacimiento')?.errors?.required">
+                      Su fecha de nacimiento es requerida.
+                  </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <mat-form-field appearance="fill" class="example-form-field">
+                <mat-label>Seleccione una opcion</mat-label>
+                <mat-select disableRipple formControlName="generoPersona"
+                name="" id="" required >
+                  <mat-option value="Hombre">Hombre</mat-option>
+                  <mat-option value="Mujer">Mujer</mat-option>
+                  <mat-option value="Otro">Otro</mat-option>
+                </mat-select>
+              </mat-form-field>
+              
+         
+              <div *ngIf="datosClienteFormGroup.get('generoPersona')?.invalid && 
+              (datosClienteFormGroup.get('generoPersona')?.dirty || 
+              datosClienteFormGroup.get('generoPersona')?.touched)">
+
+                  <div class="text-center" *ngIf="datosClienteFormGroup.get('generoPersona')?.errors?.required">
+                      Seleccione su genero.
+                  </div>
+              </div>
+            </div>
+
+          </div>
+
         </div>
+        <div class="card-footer">
+          <div class="row">
+            <div class="col-6 d-flex justify-content-center">
+              <button class="btn btn-warning" >cancelar</button>
+            </div>
+            <div class="col-6 d-flex justify-content-center">
+              <button class="btn btn-success" [disabled]='!datosClienteFormGroup.valid' >Siguiente</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
+
+</form>
 
 
-</form> 
+<form [formGroup]='datosClienteDireccionFormGroup'(ngSubmit)='guardarDireccion()' *ngIf="mostrarFormularios">
+
+  <div class="row">
+    <div class="col-8 offset-2">
+      <div class="card">
+        <div class="card-header"> <h2 class="card-title text-center"> {{ tituloDireccionCliente }} </h2> </div>
+        <div class="card-body">
+          <div class="row">
+
+            <div class="col-12">
+              <div class="form-group">
+                <input type="text" class="form-control text-center" 
+                placeholder="Ingrese su calle" 
+                formControlName="calleDireccion"
+                name="" id="" required
+                [pattern]="soloLetrasNumeros" minlength="3" maxlength="10">
+              </div>
+              <div *ngIf="datosClienteDireccionFormGroup.get('calleDireccion')?.invalid && 
+              (datosClienteDireccionFormGroup.get('calleDireccion')?.dirty || 
+              datosClienteDireccionFormGroup.get('calleDireccion')?.touched)">
+
+                  <div class="text-center" *ngIf="datosClienteDireccionFormGroup.get('calleDireccion')?.errors?.required">
+                      La calle es requerida.
+                  </div>
+                  <div class="text-center" 
+                  *ngIf="datosClienteDireccionFormGroup.get('calleDireccion')?.errors?.pattern">
+                    Ingrese solo letras.
+                </div>
+
+                <div class="text-center" 
+                *ngIf="datosClienteDireccionFormGroup.get('calleDireccion')?.errors?.minLength">
+                  Em mínimo de caracteres es de 3.
+              </div>
+
+              <div class="text-center" 
+              *ngIf="datosClienteDireccionFormGroup.get('calleDireccion')?.errors?.maxLength">
+                El maximo de caracteres es de 10.
+            </div>
+
+
+              </div>
+            </div>
+          </div>
+          <div class="row mt-2">
+            <div class="col-12">
+              <div class="form-group">
+                <input type="text" class="form-control text-center" 
+                placeholder="Ingrese su colonia" 
+                formControlName="coloniaDireccion"
+                name="" id="" required>
+              </div>
+              <div *ngIf="datosClienteDireccionFormGroup.get('coloniaDireccion')?.invalid && 
+              (datosClienteDireccionFormGroup.get('coloniaDireccion')?.dirty || 
+              datosClienteDireccionFormGroup.get('coloniaDireccion')?.touched)">
+
+                  <div class="text-center" *ngIf="datosClienteDireccionFormGroup.get('coloniaDireccion')?.errors?.required">
+                     La colonia es requerida.
+                  </div>
+
+                  <div class="text-center" 
+                  *ngIf="datosClienteDireccionFormGroup.get('coloniaDireccion')?.errors?.pattern">
+                    Ingrese solo letras.
+                </div>
+
+                <div class="text-center" 
+                *ngIf="datosClienteDireccionFormGroup.get('coloniaDireccion')?.errors?.minLength">
+                  Em mínimo de caracteres es de 3.
+              </div>
+
+              <div class="text-center" 
+              *ngIf="datosClienteDireccionFormGroup.get('coloniaDireccion')?.errors?.maxLength">
+                El maximo de caracteres es de 10.
+            </div>
+
+
+              </div>
+            </div>
+          </div>
+
+          <div class="row mt-2">
+            <div class="col-12">
+              <div class="form-group">
+                <input type="text" class="form-control text-center" 
+                placeholder="Ingrese su estado" 
+                formControlName="estadoDireccion"
+                name="" id="" required>
+              </div>
+              <div *ngIf="datosClienteDireccionFormGroup.get('estadoDireccion')?.invalid && 
+              (datosClienteDireccionFormGroup.get('estadoDireccion')?.dirty || 
+              datosClienteDireccionFormGroup.get('estadoDireccion')?.touched)">
+
+                  <div class="text-center" *ngIf="datosClienteDireccionFormGroup.get('estadoDireccion')?.errors?.required">
+                     Ingrese su estado.
+                  </div>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="row mt-2">
+            <div class="col-12">
+              <div class="form-group">
+                <input type="text" class="form-control text-center" 
+                placeholder="Ingrese su codigo postal" 
+                formControlName="codigoPostalDireccion"
+                name="" id="" required>
+              </div>
+              <div *ngIf="datosClienteDireccionFormGroup.get('codigoPostalDireccion')?.invalid && 
+              (datosClienteDireccionFormGroup.get('codigoPostalDireccion')?.dirty || 
+              datosClienteDireccionFormGroup.get('codigoPostalDireccion')?.touched)">
+
+                  <div class="text-center" *ngIf="datosClienteDireccionFormGroup.get('codigoPostalDireccion')?.errors?.required">
+                     La colonia es requerida.
+                  </div>
+
+                  <div class="text-center" 
+                  *ngIf="datosClienteDireccionFormGroup.get('codigoPostalDireccion')?.errors?.pattern">
+                    Ingrese solo letras.
+                </div>
+
+                <div class="text-center" 
+                *ngIf="datosClienteDireccionFormGroup.get('codigoPostalDireccion')?.errors?.minLength">
+                  Em mínimo de caracteres es de 3.
+              </div>
+
+              <div class="text-center" 
+              *ngIf="datosClienteDireccionFormGroup.get('codigoPostalDireccion')?.errors?.maxLength">
+                El maximo de caracteres es de 10.
+            </div>
+
+
+              </div>
+            </div>
+          </div>
+
+
+          
+
+          <div class="row mt-2">
+            <div class="col-6">
+              <div class="form-group">
+                <input type="text" class="form-control text-center" 
+                placeholder="Ingrese numero interior" 
+                formControlName="numeroInterior"
+                name="" id="" [pattern]="soloNumeros">
+              </div>
+              <div *ngIf="datosClienteDireccionFormGroup.get('numeroInterior')?.invalid && 
+              (datosClienteDireccionFormGroup.get('numeroInterior')?.dirty || 
+              datosClienteDireccionFormGroup.get('numeroInterior')?.touched)">
+
+              <div class="text-center" 
+              *ngIf="datosClienteDireccionFormGroup.get('numeroInterior')?.errors?.pattern">
+                Ingrese solo numeros.
+              </div>
+                  <div class="text-center" 
+                  *ngIf="datosClienteDireccionFormGroup.get('numeroInterior')?.errors?.minLength">
+                    Em mínimo de caracteres es de 3.
+                  </div>
+                  <div class="text-center" 
+                  *ngIf="datosClienteDireccionFormGroup.get('numeroInterior')?.errors?.maxLength">
+                    El maximo de caracteres es de 10.
+                  </div>
+              </div>
+            </div>
+
+            <div class="col-6">
+              <div class="form-group">
+                <input type="text" class="form-control text-center" 
+                placeholder="Ingrese numero exterior" 
+                formControlName="numeroExterior"
+                name="" id="" required
+                [pattern]="soloNumeros">
+              </div>
+              <div *ngIf="datosClienteDireccionFormGroup.get('numeroExterior')?.invalid && 
+              (datosClienteDireccionFormGroup.get('numeroExterior')?.dirty || 
+              datosClienteDireccionFormGroup.get('numeroExterior')?.touched)">
+
+              <div class="text-center" 
+              *ngIf="datosClienteDireccionFormGroup.get('numeroExterior')?.errors?.pattern">
+                Ingrese solo numeros.
+              </div>
+                  <div class="text-center" 
+                  *ngIf="datosClienteDireccionFormGroup.get('numeroExterior')?.errors?.minLength">
+                    Em mínimo de caracteres es de 0.
+                  </div>
+                  <div class="text-center" 
+                  *ngIf="datosClienteDireccionFormGroup.get('numeroExterior')?.errors?.maxLength">
+                    El maximo de caracteres es de 10.
+                  </div>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="card-footer">
+          <div class="row">
+            <div class="col-6 d-flex justify-content-center">
+              <button class="btn btn-warning" (click)="cancelarDireccion();" >cancelar</button>
+            </div>
+            <div class="col-6 d-flex justify-content-center">
+              <button class="btn btn-success" [disabled]='!datosClienteDireccionFormGroup.valid' >Guardar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</form>
+
+
+
 
 
 

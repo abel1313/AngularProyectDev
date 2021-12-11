@@ -2,6 +2,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { EventEmitter, Injectable } from '@angular/core';
 import { Observable,throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
+import { ICliente, IRespuestaDTO } from '../models';
 import { IProducto } from '../views/models';
 
 @Injectable({
@@ -22,6 +23,18 @@ export class ServicesGenericosService {
   productos<R>(url: string): Observable<R[]>{
     return this.http.get<R[]>(`${this.url}/${url}`);
   }
+
+  generico<R>(url: string): Observable<R[]>{
+    return this.http.get<R[]>(`${this.url}/${url}`);
+  }
+  guardarCliente(url: string, cliente: ICliente ): Observable<IRespuestaDTO<ICliente>>{
+    return this.http.post<IRespuestaDTO<ICliente>>(`${this.url}/${url}`, cliente).pipe(
+      retry(2),
+      catchError(this.handleError)
+    );
+  }
+
+
   eliminar<R>( id: number,url: string): Observable<R>{
     
     

@@ -1,13 +1,36 @@
-<div class="card text-center">
-    <div class="card-header">
-      Featured
-    </div>
-    <div class="card-body">
-      <h5 class="card-title">Special title treatment</h5>
-      <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-      <a href="#" class="btn btn-primary">Go somewhere</a>
-    </div>
-    <div class="card-footer text-muted">
-      2 days ago
-    </div>
+<div class="row">
+  <div class="col-12">
+    <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="table table-striped">
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Apellidos</th>
+          <th>Estado</th>
+          <th>Acción</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of datosMostrar">
+          <td>{{ item.nombre | uppercase }}</td>
+          <td>{{ item.apeidos | uppercase }}</td>
+          <td>{{ item.estado | uppercase }}</td>
+          <td>
+            <button class="btn btn-info col-6">editar</button>
+            <button class="btn btn-warning col-6" (click)="eliminarCliente(item);">eliminar</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
+</div>
+
+
+
+<div class="overlay" *ngIf="load">
+   
+  <div class="spinner ">
+      <img [src]="['./assets/giphy.gif']"/>
+    </div>
+   
+  </div>
+

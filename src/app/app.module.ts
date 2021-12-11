@@ -12,12 +12,13 @@ import { SharedModule } from './shared/shared.module';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { BannerViewComponent } from './views/banner-view/banner-view.component';
 
+
 @NgModule({
   declarations: [
     AppComponent,
     NavComponent,
     FooterComponent,
-    BannerViewComponent
+    BannerViewComponent,
     
   ],
   imports: [
