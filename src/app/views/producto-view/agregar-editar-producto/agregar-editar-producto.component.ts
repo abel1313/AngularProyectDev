@@ -89,7 +89,6 @@ soloNumeros: string = '^[0-9]+([.][0-9]+)?$';
       Mensaje.mensaje('Alerta',mostrarMensaje, 'success', 'Aceptar');
       this.service.mostrarProductos$.emit(false);
       this.formProducto.reset();
-console.log(res)
     }, err=> 
     {
       this.load = true;
@@ -103,7 +102,6 @@ console.log(res)
     {
       this.tituloProducto = 'Agregar producto';
     } 
-   console.log( this.router.url );
   }
 
 
