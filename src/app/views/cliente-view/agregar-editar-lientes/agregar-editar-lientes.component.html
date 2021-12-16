@@ -1,6 +1,5 @@
 {{ fecha | pipeFecha }}
 <form [formGroup]='datosClienteFormGroup'(ngSubmit)='guardar()' *ngIf="!mostrarFormularios">
-
   <div class="row">
     <div class="col-8 offset-2">
       <div class="card">
@@ -23,19 +22,16 @@
                   *ngIf="datosClienteFormGroup.get('nombrePersona')?.errors?.required">
                       El nombre es requerido.
                   </div>
-                  <div class="text-center" 
-                  *ngIf="datosClienteFormGroup.get('nombrePersona')?.errors?.pattern">
-                    Ingrese solo letras.
-                </div>
+             
 
                 <div class="text-center" 
-                *ngIf="datosClienteFormGroup.get('nombrePersona')?.errors?.minLength">
-                  Em mínimo de caracteres es de 3.
+                *ngIf="datosClienteFormGroup.get('nombrePersona')?.errors?.minlength">
+                  Em mínimo de caracteres es de {{ minimoCarcateres }}.
               </div>
 
               <div class="text-center" 
-              *ngIf="datosClienteFormGroup.get('nombrePersona')?.errors?.maxLength">
-                El maximo de caracteres es de 10.
+              *ngIf="datosClienteFormGroup.get('nombrePersona')?.errors?.maxlength">
+                El maximo de caracteres es de {{ maximoCarcateres }}.
             </div>
 
               </div>
@@ -65,13 +61,13 @@
                 </div>
 
                 <div class="text-center" 
-                *ngIf="datosClienteFormGroup.get('apeidoPaternoPersona')?.errors?.minLength">
-                  Em mínimo de caracteres es de 3.
+                *ngIf="datosClienteFormGroup.get('apeidoPaternoPersona')?.errors?.minlength">
+                  Em mínimo de caracteres es de {{ minimoCarcateres }}.
               </div>
 
               <div class="text-center" 
-              *ngIf="datosClienteFormGroup.get('apeidoPaternoPersona')?.errors?.maxLength">
-                El maximo de caracteres es de 10.
+              *ngIf="datosClienteFormGroup.get('apeidoPaternoPersona')?.errors?.maxlength">
+                El maximo de caracteres es de {{ maximoCarcateres }}.
             </div>
 
 
@@ -104,19 +100,17 @@
                 </div>
 
                 <div class="text-center" 
-                *ngIf="datosClienteFormGroup.get('apeidoMaternoPersona')?.errors?.minLength">
-                  Em mínimo de caracteres es de 3.
+                *ngIf="datosClienteFormGroup.get('apeidoMaternoPersona')?.errors?.minlength">
+                  Em mínimo de caracteres es de {{ minimoCarcateres }}.
               </div>
 
               <div class="text-center" 
-              *ngIf="datosClienteFormGroup.get('apeidoMaternoPersona')?.errors?.maxLength">
-                El maximo de caracteres es de 10.
+              *ngIf="datosClienteFormGroup.get('apeidoMaternoPersona')?.errors?.maxlength">
+                El maximo de caracteres es de {{ maximoCarcateres }}.
             </div>
 
-
-
-
               </div>
+              
             </div>
           </div>
 
@@ -186,12 +180,10 @@
       </div>
     </div>
   </div>
-
 </form>
 
 
 <form [formGroup]='datosClienteDireccionFormGroup'(ngSubmit)='guardarDireccion()' *ngIf="mostrarFormularios">
-
   <div class="row">
     <div class="col-8 offset-2">
       <div class="card">
@@ -220,12 +212,12 @@
                 </div>
 
                 <div class="text-center" 
-                *ngIf="datosClienteDireccionFormGroup.get('calleDireccion')?.errors?.minLength">
+                *ngIf="datosClienteDireccionFormGroup.get('calleDireccion')?.errors?.minlength">
                   Em mínimo de caracteres es de 3.
               </div>
 
               <div class="text-center" 
-              *ngIf="datosClienteDireccionFormGroup.get('calleDireccion')?.errors?.maxLength">
+              *ngIf="datosClienteDireccionFormGroup.get('calleDireccion')?.errors?.maxlIngrese su estado.ength">
                 El maximo de caracteres es de 10.
             </div>
 
@@ -255,12 +247,12 @@
                 </div>
 
                 <div class="text-center" 
-                *ngIf="datosClienteDireccionFormGroup.get('coloniaDireccion')?.errors?.minLength">
+                *ngIf="datosClienteDireccionFormGroup.get('coloniaDireccion')?.errors?.minlength">
                   Em mínimo de caracteres es de 3.
               </div>
 
               <div class="text-center" 
-              *ngIf="datosClienteDireccionFormGroup.get('coloniaDireccion')?.errors?.maxLength">
+              *ngIf="datosClienteDireccionFormGroup.get('coloniaDireccion')?.errors?.maxlength">
                 El maximo de caracteres es de 10.
             </div>
 
@@ -311,12 +303,12 @@
                 </div>
 
                 <div class="text-center" 
-                *ngIf="datosClienteDireccionFormGroup.get('codigoPostalDireccion')?.errors?.minLength">
+                *ngIf="datosClienteDireccionFormGroup.get('codigoPostalDireccion')?.errors?.minlength">
                   Em mínimo de caracteres es de 3.
               </div>
 
               <div class="text-center" 
-              *ngIf="datosClienteDireccionFormGroup.get('codigoPostalDireccion')?.errors?.maxLength">
+              *ngIf="datosClienteDireccionFormGroup.get('codigoPostalDireccion')?.errors?.maxlength">
                 El maximo de caracteres es de 10.
             </div>
 
@@ -345,11 +337,11 @@
                 Ingrese solo numeros.
               </div>
                   <div class="text-center" 
-                  *ngIf="datosClienteDireccionFormGroup.get('numeroInterior')?.errors?.minLength">
+                  *ngIf="datosClienteDireccionFormGroup.get('numeroInterior')?.errors?.minlength">
                     Em mínimo de caracteres es de 3.
                   </div>
                   <div class="text-center" 
-                  *ngIf="datosClienteDireccionFormGroup.get('numeroInterior')?.errors?.maxLength">
+                  *ngIf="datosClienteDireccionFormGroup.get('numeroInterior')?.errors?.maxlength">
                     El maximo de caracteres es de 10.
                   </div>
               </div>
@@ -372,11 +364,11 @@
                 Ingrese solo numeros.
               </div>
                   <div class="text-center" 
-                  *ngIf="datosClienteDireccionFormGroup.get('numeroExterior')?.errors?.minLength">
+                  *ngIf="datosClienteDireccionFormGroup.get('numeroExterior')?.errors?.minlength">
                     Em mínimo de caracteres es de 0.
                   </div>
                   <div class="text-center" 
-                  *ngIf="datosClienteDireccionFormGroup.get('numeroExterior')?.errors?.maxLength">
+                  *ngIf="datosClienteDireccionFormGroup.get('numeroExterior')?.errors?.maxlength">
                     El maximo de caracteres es de 10.
                   </div>
 
@@ -398,8 +390,21 @@
       </div>
     </div>
   </div>
-
 </form>
+
+
+
+
+
+
+
+<div class="overlay" *ngIf="load">
+   
+  <div class="spinner ">
+      <img [src]="['./assets/giphy.gif']"/>
+    </div>
+   
+  </div>
 
 
 

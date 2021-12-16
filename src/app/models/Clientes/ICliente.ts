@@ -13,7 +13,38 @@ export interface ICliente extends IBase
 
 export class Cliente{
 
-    private nombreCliente: string = '';
+    public static inicializarIMostrarDatos =
+    {
+    id: 0,
+    nombre: '',
+    apeidos: '',
+    estado: ''
+    }
+    
+    public static incializarCliente: ICliente = 
+    {
+        id: 0,
+        personaCliente:
+        {
+            id: 0,
+            nombrePersona: '',
+            apeidoPaternoPersona: '',
+            apeidoMaternoPersona: '',
+            generoPersona: '',
+            fechaNacimiento: '',
+            direccion: 
+            {
+                id: 0,
+                estadoDireccion:       '',
+                calleDireccion:        '',
+                coloniaDireccion:      '',
+                codigoPostalDireccion: '',
+                numeroInterior: '',
+                numeroExterior: '',
+            }
+        }
+    };
+
 
     constructor()
     {

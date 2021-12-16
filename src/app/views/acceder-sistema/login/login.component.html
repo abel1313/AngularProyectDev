@@ -1,0 +1,109 @@
+<div class="row">
+
+    <div class="col-6">
+
+    </div>
+
+    <div class="col-6">
+        <div class="row">
+            <div class="col-12 border">
+                <div class="card">
+                    <div class="card-header">
+                        <p class="card-text text-center fw-bolder">Inicio de sesión</p>
+                    </div>
+                    <div class="card-body">
+
+                        <form [formGroup]='datosUsuario' (ngSubmit)='accederSistema()'>
+
+                            <div class="row">
+                                <div class="col-12 mt-4">
+                                    <div class="form-group ">
+                                        <label for="usuario" class="fw-bolder d-flex justify-content-center "> Usuario
+                                        </label>
+                                        <input type="text" class="form-control text-center" id="usuarios"
+                                            placeholder="Ingrese usuario" name="nombreUsuario" formControlName="nombreUsuario" required
+                                            [pattern]="soloLetras" minlength="3">
+
+                                        <div *ngIf="datosUsuario.get('nombreUsuario')?.invalid && 
+                                        (datosUsuario.get('nombreUsuario')?.dirty || 
+                                        datosUsuario.get('nombreUsuario')?.touched)">
+
+                                            <div class="text-center"
+                                                *ngIf="datosUsuario.get('nombreUsuario')?.errors?.required">
+                                                El nombre de usuario es requerido.
+                                            </div>
+                                            <div class="text-center"
+                                                *ngIf="datosUsuario.get('nombreUsuario')?.errors?.pattern">
+                                                Ingrese solo letras
+                                            </div>
+
+                                            <div class="text-center"
+                                                *ngIf="datosUsuario.get('nombreUsuario')?.errors?.minlength">
+                                                Em mínimo de caracteres es de {{ minimoCarcateres }}.
+                                            </div>
+
+                                        </div>
+
+
+
+                                    </div>
+                                </div>
+                                <div class="col-12 mt-4">
+                                    <div class="form-group ">
+                                        <label for="contrasena" class="fw-bolder d-flex justify-content-center ">
+                                            Contraseña </label>
+                                        <input type="text" class="form-control text-center" id="contrasena"
+                                            placeholder="Ingrese Contraseña" formControlName="contrasenaUsuario"
+                                            required>
+
+                                        <div *ngIf="datosUsuario.get('contrasenaUsuario')?.invalid && 
+                                        (datosUsuario.get('contrasenaUsuario')?.dirty || 
+                                        datosUsuario.get('contrasenaUsuario')?.touched)">
+
+                                            <div class="text-center"
+                                                *ngIf="datosUsuario.get('contrasenaUsuario')?.errors?.required">
+                                                La contraseña es requerida.
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="row mt-4">
+                                    <div class="col-12">
+                                        <b class="text-danger d-flex justify-content-center">*Si aun no esta registrado,
+                                            dar click en registrar</b>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 mt-4">
+                                    <div class="row ">
+                                        <div class="col-6 d-flex justify-content-center">
+                                            <button class="btn btn-success">Registrarse</button>
+                                        </div>
+                                        <div class="col-6 d-flex justify-content-center">
+                                            <button class="btn btn-success" type="submit" [disabled]="!datosUsuario.valid">Acceder</button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+
+
+<div class="overlay" *ngIf="load">
+   
+    <div class="spinner ">
+        <img [src]="['./assets/giphy.gif']"/>
+      </div>
+     
+    </div>

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, NgZone, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { DataTableDirective } from 'angular-datatables';
 import { Subject, Subscription } from 'rxjs';
@@ -12,7 +12,7 @@ import { Mensaje } from '../../models';
   templateUrl: './mostrar-clientes.component.html',
   styleUrls: ['./mostrar-clientes.component.scss']
 })
-export class MostrarClientesComponent implements OnInit, AfterViewInit  {
+export class MostrarClientesComponent implements OnInit, AfterViewInit, OnDestroy  {
 
   constructor( private service: ServicesGenericosService, private ngZone: NgZone, private router: Router ) { 
 
@@ -24,15 +24,19 @@ export class MostrarClientesComponent implements OnInit, AfterViewInit  {
   @ViewChild(DataTableDirective, { static: false })
   dtElement: DataTableDirective;
 
+  enviarTituloEditarCliente: string = '';
 
+  enviarClienteEditar: IDatosMostrar;
 
-  datosCliente: Array<ICliente> = [];
+  datosCliente: Array<IDatosMostrar> = [];
   datosClienteMostrar: Array<IDatosMostrar> = [];
 
    datosMostrar: Array<IDatosMostrar> = [];
 
   
   load: Boolean = false;
+
+  mostrarAgregarEditar: Boolean = false;
 
 
   subscription: Subscription;
@@ -49,30 +53,37 @@ export class MostrarClientesComponent implements OnInit, AfterViewInit  {
       }
     };
 
-   
+
     setTimeout(()=>{
 this.cargarClientes();
     },1500 );
 
-
-  
   }
 
-
-
-  
+ 
+  mostrarDatosNav(): void
+  {
+    this.subscription.add(this.service.mostrarProductos$.subscribe(( res: Boolean)=>{
+      this.mostrarAgregarEditar = res;
+    }));
+  }
   cargarClientes(): void
   {
-    const url: string = 'clientes';
-    this.subscription.add( this.service.generico<ICliente>(url).subscribe( ( res: Array<ICliente> )=>{
-      this.datosMostrar =  new Cliente().datosUsuario(res);
-      this.datosCliente = res;
+    this.subscription.add( this.service.obtenerCliente<IRespuestaDTO<Array<IDatosMostrar>>>(UrlApiREST.OBTENER_CLIENTES)
+    .subscribe( ( res )=>{
+      this.datosCliente = res.t;
       this.rerenderTable();  
       
     }, err=> console.log(err) ) );
   }
 
-
+  editarCliente( cliente: IDatosMostrar ): void
+  {
+  
+    this.mostrarAgregarEditar = !this.mostrarAgregarEditar;
+    this.enviarTituloEditarCliente = 'Editar Cliente'
+    this.enviarClienteEditar = cliente;
+  }
   eliminarCliente(cliente: IDatosMostrar ): void
   {
     Swal.fire({
