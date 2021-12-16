@@ -1,8 +1,8 @@
 import { AfterViewInit, Component, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { DataTableDirective } from 'angular-datatables';
-import { Subject, Subscription } from 'rxjs';
-import { Cliente, ICliente, IDatosMostrar, IMensajeRespuesta, IRespuestaDTO, MensajeFactory, UrlApiREST } from 'src/app/models';
+import { Observable, of, Subject, Subscription } from 'rxjs';
+import { Cliente, ConfigDatatable, ICliente, IDatosMostrar, IMensajeRespuesta, IRespuestaDTO, MensajeFactory, UrlApiREST } from 'src/app/models';
 import { ServicesGenericosService } from 'src/app/service/services-genericos.service';
 import Swal from 'sweetalert2';
 import { Mensaje } from '../../models';
@@ -28,7 +28,7 @@ export class MostrarClientesComponent implements OnInit, AfterViewInit, OnDestro
 
   enviarClienteEditar: IDatosMostrar;
 
-  datosCliente: Array<IDatosMostrar> = [];
+  datosCliente: Observable<Array<IDatosMostrar>>;
   datosClienteMostrar: Array<IDatosMostrar> = [];
 
    datosMostrar: Array<IDatosMostrar> = [];
@@ -42,39 +42,33 @@ export class MostrarClientesComponent implements OnInit, AfterViewInit, OnDestro
   subscription: Subscription;
   ngOnInit(): void {
 
-    this.dtOptions = {
-      pagingType: 'full_numbers',
-      paging: false,
-      retrieve: true,
-      pageLength: 5,
-      responsive: true,
-      language: {
-          url: "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
-      }
-    };
+    this.dtOptions = ConfigDatatable.dtOptions;
 
 
     setTimeout(()=>{
 this.cargarClientes();
     },1500 );
 
+    this.mostrarDatosNav()
   }
 
  
   mostrarDatosNav(): void
   {
+    
+    
     this.subscription.add(this.service.mostrarProductos$.subscribe(( res: Boolean)=>{
       this.mostrarAgregarEditar = res;
     }));
   }
   cargarClientes(): void
   {
-    this.subscription.add( this.service.obtenerCliente<IRespuestaDTO<Array<IDatosMostrar>>>(UrlApiREST.OBTENER_CLIENTES)
+    this.service.obtenerCliente<IRespuestaDTO<Array<IDatosMostrar>>>(UrlApiREST.OBTENER_CLIENTES)
     .subscribe( ( res )=>{
-      this.datosCliente = res.t;
+      this.datosCliente = of(res.t);
       this.rerenderTable();  
       
-    }, err=> console.log(err) ) );
+    }, err=> console.log(err));
   }
 
   editarCliente( cliente: IDatosMostrar ): void
@@ -148,6 +142,7 @@ this.cargarClientes();
 
   ngAfterViewInit(): void {
     this.dtTrigger.next();
+    
   }
 
   // método para renderizar la tabla
@@ -161,8 +156,7 @@ this.cargarClientes();
 
   ngOnDestroy(): void {
     // Do not forget to unsubscribe the event
-    this.dtTrigger.unsubscribe();
-    if( this.subscription != null )
+    console.log(' desemtrea');
         this.subscription.unsubscribe();
   }
 }

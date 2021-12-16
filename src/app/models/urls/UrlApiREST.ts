@@ -14,7 +14,7 @@ export enum UrlApiREST
     OBTENER_USUARIOS = 'usuarios/obtenerUsuario',
     
     REGISTRAR_USUARIO_PERMISOS = "usuarios/registrarUsuario",
-
+    ELIMINAR_USUARIO = "usuarios",
     
     OBTENER_VISTAS = "vistas/obtenerVistas",
     

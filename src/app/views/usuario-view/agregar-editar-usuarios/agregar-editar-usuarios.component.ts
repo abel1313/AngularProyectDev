@@ -1,9 +1,9 @@
-import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable, of, Subscription } from 'rxjs';
 import { map, mapTo } from 'rxjs/operators';
-import { ICliente, IMensajeRespuesta, InicializarUsuario, IPermisos, IRegistrarUsuario, IRespuestaDTO, IUsuario, IVista, IVistaCheck, MensajeFactory, UrlApiREST } from 'src/app/models';
+import { ICliente, IMensajeRespuesta, InicializarUsuario, IPermisos, IRegistrarUsuario, IRespuestaDTO, IUsuario, IUsuarioRespuesta, IVista, IVistaCheck, MensajeFactory, UrlApiREST } from 'src/app/models';
 import { ServicesGenericosService } from 'src/app/service/services-genericos.service';
 import { Mensaje } from '../../models';
 
@@ -13,6 +13,8 @@ import { Mensaje } from '../../models';
   styleUrls: ['./agregar-editar-usuarios.component.scss']
 })
 export class AgregarEditarUsuariosComponent implements OnInit, OnDestroy {
+@Input() enviarUsuarioEditar: IUsuarioRespuesta;
+
 
   subscription: Subscription;
   soloLetras: string = '[a-zA-Z ]{2,10}';
@@ -25,6 +27,8 @@ export class AgregarEditarUsuariosComponent implements OnInit, OnDestroy {
 
 
   mostrarMensaje: Boolean = false;
+
+  ocultarPermisos: Boolean = false;
   iVista: Array<IVistaCheck> = [];
 
 
@@ -40,6 +44,7 @@ export class AgregarEditarUsuariosComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
+    this.ocultarPermisos = this.router.url === '/sistema/registrar' ? true: false;
 
     this.datosUsuarioFormGroup = this.fb.group({
       nombreUsuario: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(10)]],
@@ -47,10 +52,26 @@ export class AgregarEditarUsuariosComponent implements OnInit, OnDestroy {
       confirmarContrasenaUsuario: ['', [Validators.required, Validators.minLength(3)]],
     });
 
+    if(this.enviarUsuarioEditar !== null )
+    {
+      if( this.enviarUsuarioEditar !== null && this.enviarUsuarioEditar !== undefined )
+      {
+        this.datosUsuarioFormGroup.get('nombreUsuario')?.setValue( this.enviarUsuarioEditar.nombreUsuario);
+      }
+        
+    }
     this.cargarVistas();
     
   }
 
+
+  iniciarSesion(): void
+  {
+    this.ngZone.run(()=>{
+      this.router.navigate(['sistema']);
+    });
+    
+  }
 
   seleccionarCheck(item: IVistaCheck, check: any, i: number): void {
 
@@ -146,7 +167,10 @@ export class AgregarEditarUsuariosComponent implements OnInit, OnDestroy {
   }
   ngOnDestroy(): void {
     if (this.subscription !== null)
+    {
+      console.log(' entro agregar')
       this.subscription.unsubscribe();
+    }
   }
 
 

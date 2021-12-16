@@ -3,15 +3,15 @@
     <a href (click)="false" class="nav-link" ngbDropdownToggle >Clientes</a>
     <div ngbDropdownMenu>
       <button ngbDropdownItem [routerLink]="[ '/clientes']" >Nuevo</button>
-      <button ngbDropdownItem [routerLink]="[ '/clientes/mostrar']" (click)="mostrarCliente();" >Mostrar</button>
+      <button ngbDropdownItem [routerLink]="[ '/clientes/mostrar']" (click)="mostrarClientes();" >Mostrar</button>
     </div>
   </li>
 
   <li ngbDropdown class="nav-item">
     <a href (click)="false" class="nav-link" ngbDropdownToggle>Usuarios</a>
     <div ngbDropdownMenu>
-      <button ngbDropdownItem ngbDropdownItem [routerLink]="[ '/usuarios']">Nuevo</button>
-      <button ngbDropdownItem [routerLink]="[ '/usuarios/mostrar']">Mostrar</button>
+      <button ngbDropdownItem ngbDropdownItem [routerLink]="[ '/usuarios']"   > Nuevo</button>
+      <button ngbDropdownItem [routerLink]="[ '/usuarios/mostrar']"  (click)="mostrarUsuarios();">Mostrar</button>
     </div>
   </li>
 

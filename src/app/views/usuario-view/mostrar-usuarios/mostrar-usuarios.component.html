@@ -1,5 +1,5 @@
 
-<div class="row" >
+<div class="row" *ngIf="!mostrarAgregarUsuario">
   <div class="col-12">
 
       <!-- datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" -->
@@ -12,21 +12,23 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let item of datosUsuario; let i = index;">
+        <tr *ngFor="let item of datosUsuario | async">
           <td>{{ item.nombreUsuario | uppercase }}</td>
           <td *ngIf="item.permisos.length > 0; else sinPermisos ">Puede editar sus permisos</td>
            <td>
-             <!--
-            <button class="btn btn-info col-6"  (click)="editarCliente(item);" >editar</button>
-            <button class="btn btn-warning col-6" (click)="eliminarCliente(item);">eliminar</button> -->
+             
+            <button class="btn btn-info col-6"  (click)="editarUsuario(item);" >editar</button>
+            <button class="btn btn-warning col-6" (click)="eliminarUsuario(item);">eliminar</button>
           </td>
         </tr>
       </tbody>
     </table>
   </div>
 </div>
-
-
 <ng-template #sinPermisos> <td>No cuenta con permisos</td> </ng-template>
 
+
+<app-agregar-editar-usuarios *ngIf="mostrarAgregarUsuario"
+  [enviarUsuarioEditar]="usuarioEditar"
+></app-agregar-editar-usuarios>
 

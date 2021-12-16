@@ -12,10 +12,10 @@ import { Mensaje } from '../../models';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit,OnDestroy {
+export class LoginComponent implements OnInit, OnDestroy {
 
   subscription: Subscription;
-  
+
   datosUsuario: FormGroup;
   minimoCarcateres: number = 3;
   maximoCarcateres: number = 10;
@@ -25,68 +25,81 @@ export class LoginComponent implements OnInit,OnDestroy {
 
   iUsuario: IUsuario;
   constructor(
-    private fb: FormBuilder, 
+    private fb: FormBuilder,
     private service: ServicesGenericosService,
     private ngZone: NgZone, private router: Router) {
-    
-      this.subscription = new Subscription();
-      this.soloLetras = Patron.SOLO_LETRAS;
-     
-    
+
+    this.subscription = new Subscription();
+    this.soloLetras = Patron.SOLO_LETRAS;
+
+
   }
 
   ngOnInit(): void {
 
     this.datosUsuario = this.fb.group({
-nombreUsuario: ['',[ Validators.required, Validators.minLength(3)]],
-contrasenaUsuario: ['', [Validators.required]]
+      nombreUsuario: ['', [Validators.required, Validators.minLength(3)]],
+      contrasenaUsuario: ['', [Validators.required]]
     });
   }
 
-  accederSistema(): void
+  registrarSistema(): void
   {
+    this.router.navigate(['sistema/registrar']);
+  }
+
+  accederSistema(): void {
     this.iUsuario = InicializarUsuario.inicializarUsuario;
     this.iUsuario = this.datosUsuario.value;
     this.load = true;
-    this.subscription.add( this.service.genericoPost<IUsuario,IRespuestaDTO<IUsuarioRespuesta>>
-      (UrlApiREST.ACCEDER_SISTEMA, this.iUsuario).subscribe((res)=>{
-console.log(res, ' res')
+    this.subscription.add(this.service.genericoPost<IUsuario, IRespuestaDTO<IUsuarioRespuesta>>
+      (UrlApiREST.ACCEDER_SISTEMA, this.iUsuario).subscribe((res) => {
+        console.log(res, ' res')
 
-let codigoRespuesta: IMensajeRespuesta = null as any;
-let mostrarMensaje: string = null as any;
+        let codigoRespuesta: IMensajeRespuesta = null as any;
+        let mostrarMensaje: string = null as any;
 
-if( res.code === '200 OK' )
-{
-     codigoRespuesta = MensajeFactory.obtenereMensaje(res.codeValue) ;
-     mostrarMensaje = codigoRespuesta.mostrarMensaje(res);
+        if (res.code === '200 OK') {
+          
+          codigoRespuesta = MensajeFactory.obtenereMensaje(res.codeValue);
+          mostrarMensaje = codigoRespuesta.mostrarMensaje(res);
 
-     this.load = false;
-    Mensaje.mensaje('Mensaje',`${mostrarMensaje}`, 'success','Aceptar');
-
-}else
-{
+          if( res.codeValue === 200 )
+          {
   
-this.load = false;
-  Mensaje.mensaje('Mensaje',`Error al guardar un cliente`, 'success','Aceptar');
-}
+            this.load = false;
+            Mensaje.mensaje('Mensaje', `${mostrarMensaje}`, 'success', 'Aceptar');
+            this.router.navigate(['productos/mostrar']);
+          }else
+          {
+  
+            this.load = false;
+            Mensaje.mensaje('Mensaje', `${mostrarMensaje}`, 'success', 'Aceptar');
+            
+          }
+    
+        } else {
+
+          this.load = false;
+          Mensaje.mensaje('Mensaje', `Error al guardar un cliente`, 'success', 'Aceptar');
+        }
 
 
-    }, err=> {
-      
-      this.load = false;
-      console.log(err," aui estamos")
+      }, err => {
 
-    }) );
+        this.load = false;
+        console.log(err, " aui estamos")
+
+      }));
 
   }
 
 
   ngOnDestroy(): void {
-    if( this.subscription != null )
-    {
+    if (this.subscription != null) {
       this.subscription.unsubscribe();
     }
-  
+
   }
-    
-  }
+
+}

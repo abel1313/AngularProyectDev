@@ -242,8 +242,8 @@ this.obtenerClienteEditar();
 
 
   ngOnDestroy(): void {
-    if(this.subscription !== null)
-      this.subscription.unsubscribe();
+    
+          this.subscription.unsubscribe();
   }
 
 }

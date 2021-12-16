@@ -33,11 +33,10 @@ export interface IUsuario
 	contrasenaUsuario: string;
 	permisos?: Array<IPermisos>;
 }
-export interface IUsuarioRespuesta
+export interface IUsuarioRespuesta extends IBase
 {
-
 	nombreUsuario: string;
-	permisos: string;
+	permisos: Array<IPermisos>;
 }
 
 export interface IPermisos

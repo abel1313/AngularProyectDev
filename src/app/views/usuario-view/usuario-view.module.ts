@@ -16,6 +16,9 @@ import { SharedModule } from 'src/app/shared/shared.module';
     CommonModule,
     UsuarioViewRoutingModule,
     SharedModule
+  ],
+  exports: [
+    AgregarEditarUsuariosComponent
   ]
 })
 export class UsuarioViewModule { }

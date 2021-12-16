@@ -2,6 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Input, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, Subject, Subscription } from 'rxjs';
+import { ConfigDatatable } from 'src/app/models';
 import { ServicesGenericosService } from 'src/app/service/services-genericos.service';
 import Swal from 'sweetalert2';
 import { IProducto, Mensaje } from '../../models';
@@ -27,14 +28,7 @@ export class MostrarProductoComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
 
 
-    this.dtOptions = {
-      pagingType: 'full_numbers',
-      pageLength: 5,
-      responsive: true,
-      language: {
-          url: "https://cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
-      }
-    };
+    this.dtOptions = ConfigDatatable.dtOptions;
 
 this.cargarTablaProducto();
       this.mostrarAgregarEditar$ = this.service.mostrarAgregarEditar$;
@@ -42,9 +36,6 @@ this.cargarTablaProducto();
 
   cargarTablaProducto(): void
   {
-   
-   
-
     this.subscription.add( this.service.productos<IProducto>('productos').subscribe((res)=>{
 
       this.datosProd = res;

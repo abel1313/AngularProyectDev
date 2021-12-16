@@ -8,12 +8,19 @@ import { ServicesGenericosService } from 'src/app/service/services-genericos.ser
 })
 export class NavComponent implements OnInit {
 
+  
   constructor( private service: ServicesGenericosService ) { }
 
   ngOnInit(): void {
+
+    
   }
 
-  mostrarCliente(): void
+  mostrarClientes(): void
+  {
+      this.service.mostrarProductos$.emit(false);
+  }
+  mostrarUsuarios(): void
   {
       this.service.mostrarProductos$.emit(false);
   }
