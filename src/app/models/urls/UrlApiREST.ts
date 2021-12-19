@@ -17,5 +17,14 @@ export enum UrlApiREST
     ELIMINAR_USUARIO = "usuarios",
     
     OBTENER_VISTAS = "vistas/obtenerVistas",
+
+
+
+    // Peidos
+
+    
+    OBTENER_PEDIDO = 'pedidos/obtenerPedidos',
+
+    // Pedidos
     
 }

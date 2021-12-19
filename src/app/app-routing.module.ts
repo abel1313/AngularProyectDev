@@ -9,6 +9,16 @@ const routes: Routes =
     .then(acceder => acceder.AccederSistemaModule)
   },
   {
+    path: 'pedidos',
+    loadChildren: () => import('../app/views/pedidos/pedidos.module')
+    .then(pedido => pedido.PedidosModule)
+  },
+  {
+    path: 'venta',
+    loadChildren: () => import('../app/views/venta/venta.module')
+    .then(venta => venta.VentaModule)
+  },
+  {
     path: '',
     loadChildren: () => import('../app/views/producto-view/producto-view.module')
     .then(producto => producto.ProductoViewModule)

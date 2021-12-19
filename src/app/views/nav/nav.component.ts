@@ -25,4 +25,9 @@ export class NavComponent implements OnInit {
       this.service.mostrarProductos$.emit(false);
   }
 
+  mostrarVenta(): void
+  {
+    this.service.mostrarProductos$.emit(false);
+  }
+
 }

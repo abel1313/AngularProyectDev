@@ -14,13 +14,15 @@ import { MatNativeDateModule } from '@angular/material/core';
 import {MatSelectModule} from '@angular/material/select';
 import { PipeFechaPipe } from './pipe-fecha.pipe';
 import { Patron } from './Patron';
+import { PipeFechaPersonalizadaPipe } from './pipe-fecha-personalizada.pipe';
 
 
 
 @NgModule({
   declarations: [ 
     
-    PipeFechaPipe,
+    PipeFechaPipe, 
+    PipeFechaPersonalizadaPipe,
   ],
   imports: [
     CommonModule,
@@ -52,6 +54,7 @@ import { Patron } from './Patron';
     MatNativeDateModule,
     MatSelectModule,
     PipeFechaPipe,
+    PipeFechaPersonalizadaPipe
     
     
     

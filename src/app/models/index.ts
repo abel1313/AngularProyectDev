@@ -1,13 +1,21 @@
-export 
-{ 
-    IVistaCheck 
+export { IResponsePedido } from "./Pedidos/IResponsePedido";
+
+export { 
+    IVenta 
+} from "./Venta/IVenta";
+
+export {
+    IPedido
+} from "./Pedidos/IPedidos";
+
+export {
+    IVistaCheck
 } from "./Vistas/IVista";
 
-export 
-{ 
-    IRespuestaDTO, 
+export {
+    IRespuestaDTO,
     IMensajeRespuesta,
-    MensajeFactory 
+    MensajeFactory
 } from "./RespuestaDTO";
 
 export { IDireccion, IPersona } from "./Persona";
@@ -18,8 +26,7 @@ export { UrlApiREST } from './urls/UrlApiREST';
 export { ConfigDatatable } from './urls/ConfigDatatable';
 
 
-export 
-{
+export {
     IUsuario,
     IPermisos,
     IVista,
@@ -28,9 +35,8 @@ export
     IRegistrarUsuario
 } from '../models/Usuario/IUsuario';
 
-export class aa
-{
-    
+export class aa {
+
 }
 
 

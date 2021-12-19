@@ -23,6 +23,24 @@
       </div>
     </li>
 
+    <li ngbDropdown class="nav-item">
+      <a href (click)="false" class="nav-link" ngbDropdownToggle>Pedidos</a>
+      <div ngbDropdownMenu>
+        <button ngbDropdownItem ngbDropdownItem [routerLink]="[ '/pedidos/nuevo']"   > Nuevo</button>
+        <button ngbDropdownItem [routerLink]="[ '/pedidos/mostrar']"  (click)="mostrarUsuarios();">Mostrar</button>
+      </div>
+    </li>
+
+
+    <li ngbDropdown class="nav-item">
+      <a href (click)="false" class="nav-link" ngbDropdownToggle>Ventas</a>
+      <div ngbDropdownMenu>
+        <button ngbDropdownItem ngbDropdownItem [routerLink]="[ '/venta/nuevo']"   > Nueva</button>
+        <button ngbDropdownItem [routerLink]="[ '/venta/mostrar']"  (click)="mostrarVenta();">Mostrar</button>
+      </div>
+    </li>
+
+
   </ul>
   
   <div [ngbNavOutlet]="nav" class="mt-2"></div>
