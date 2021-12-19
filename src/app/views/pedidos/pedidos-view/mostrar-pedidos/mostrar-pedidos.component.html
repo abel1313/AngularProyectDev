@@ -1,0 +1,34 @@
+<div class="row" *ngIf="!mostrarAgregarUsuario">
+    <div class="col-12">
+  
+        <!-- datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" -->
+      <table  class="table table-striped" datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" >
+        <thead>
+          <tr>
+            <th>Fecha pedido</th>
+            <th>Cliente</th>
+            <th>Usuario que lo atendio</th>
+            <th>Acción</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr *ngFor="let item of iResponsePedido ">
+            <td>{{ item.fechaPedido | pipeFechaPersonalizada }}</td>
+            <td>{{ item.venta.cliente.personaCliente.nombrePersona | uppercase }} 
+                {{ item.venta.cliente.personaCliente.apeidoPaternoPersona | uppercase }} 
+                {{ item.venta.cliente.personaCliente.apeidoMaternoPersona  | uppercase}}  
+            </td>
+            <td>{{ item.usuario.nombreUsuario }}</td>
+            
+             <td>
+               
+              <button class="btn btn-info col-6"  (click)="editarPedido(item);" >editar</button>
+              <button class="btn btn-warning col-6" (click)="eliminarPedido(item);">eliminar</button> 
+
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
