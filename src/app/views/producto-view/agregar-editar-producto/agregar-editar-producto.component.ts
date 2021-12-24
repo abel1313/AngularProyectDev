@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
@@ -6,6 +6,7 @@ import { ServicesGenericosService } from 'src/app/service/services-genericos.ser
 
 import { ActivatedRoute, Params } from '@angular/router';
 import { IProducto, Mensaje } from '../../models';
+import { Permisos } from 'src/app/models';
 
 
 
@@ -22,7 +23,7 @@ export class AgregarEditarProductoComponent implements OnInit, OnDestroy {
   @Input() tituloEditar: string;
   tituloProducto: string = '';
   subscription: Subscription = new Subscription();
-soloNumeros: string = '^[0-9]+([.][0-9]+)?$';
+  soloNumeros: string = '^[0-9]+([.][0-9]+)?$';
   load: Boolean = false;
   type: string = 'success';
 
@@ -32,29 +33,37 @@ soloNumeros: string = '^[0-9]+([.][0-9]+)?$';
   closed: Boolean = false;
 
 
+  permisosMostrar: Array<number> = [];
+
   formProducto: FormGroup = this.fb.group({
-      nombreProducto:['',[Validators.required, Validators.minLength(5)]],
-      precioProducto:['', [Validators.required, Validators.pattern(this.soloNumeros)]],
-      descripcionProducto:['', ],
-      kiloProducto:['',[Validators.required, Validators.pattern(this.soloNumeros) ]]
+    nombreProducto: ['', [Validators.required, Validators.minLength(5)]],
+    precioProducto: ['', [Validators.required, Validators.pattern(this.soloNumeros)]],
+    descripcionProducto: ['',],
+    kiloProducto: ['', [Validators.required, Validators.pattern(this.soloNumeros)]]
 
   });
-  constructor( private fb: FormBuilder, private router: Router, 
-    private service: ServicesGenericosService, private rutaActiva: ActivatedRoute ) {
+  constructor(private fb: FormBuilder,
+    private router: Router,
+    private service: ServicesGenericosService,
+    private rutaActiva: ActivatedRoute,
+    private ngZone: NgZone) {
 
-   }
+  }
 
   ngOnInit(): void {
 
+    this.permisosMostrar = Permisos.localStorageSession(localStorage.getItem("session") as any);
+    if (this.permisosMostrar.length === 0) {
+      this.ngZone.run(() => { this.router.navigate(['/sistema']) });
+    }
     this.agregarEditar();
 
     this.tituloProducto = this.tituloEditar;
 
-  if( this.tituloProducto == 'Editar producto')
-  {
-   this.llenarFormEditar();
-  }
-    
+    if (this.tituloProducto == 'Editar producto') {
+      this.llenarFormEditar();
+    }
+
   }
   // eventEditarProduto()
   // {
@@ -64,49 +73,43 @@ soloNumeros: string = '^[0-9]+([.][0-9]+)?$';
   //   }));
   // }
 
-  cerrar():void
-  {
+  cerrar(): void {
     this.mensaje = '';
     this.mostrarMensjae = false;
   }
-  onSubmit(): void
-  { 
-    let mostrarMensaje = this.tituloProducto == 'Editar producto' ? 'El producto se actualizo correctamente': 'El producto se agregao correctamente';
+  onSubmit(): void {
+    let mostrarMensaje = this.tituloProducto == 'Editar producto' ? 'El producto se actualizo correctamente' : 'El producto se agregao correctamente';
     let url: string = 'productos';
-    let enviar:IProducto = 
+    let enviar: IProducto =
     {
       id: this.productoAgregarEditar !== undefined ? this.productoAgregarEditar.id : 0,
       nombreProducto: this.formProducto.get('nombreProducto')?.value,
-      precioProducto:this.formProducto.get('precioProducto')?.value,
-      descripcionProducto:this.formProducto.get('descripcionProducto')?.value,
-      kiloProducto:this.formProducto.get('kiloProducto')?.value,
+      precioProducto: this.formProducto.get('precioProducto')?.value,
+      descripcionProducto: this.formProducto.get('descripcionProducto')?.value,
+      kiloProducto: this.formProducto.get('kiloProducto')?.value,
     }
     this.load = true;
-    this.service.serviceGenerico<IProducto,IProducto>(enviar, url).subscribe((res)=>{
+    this.service.serviceGenerico<IProducto, IProducto>(enviar, url).subscribe((res) => {
       this.load = false;
       this.mensaje = 'Se guardo correctamente';
       this.mostrarMensjae = true;
-      Mensaje.mensaje('Alerta',mostrarMensaje, 'success', 'Aceptar');
+      Mensaje.mensaje('Alerta', mostrarMensaje, 'success', 'Aceptar');
       this.service.mostrarProductos$.emit(false);
       this.formProducto.reset();
-    }, err=> 
-    {
+    }, err => {
       this.load = true;
       console.log(err)
     });
   }
 
-  agregarEditar(): void
-  {
-    if(this.router.url === '/productos')
-    {
+  agregarEditar(): void {
+    if (this.router.url === '/productos') {
       this.tituloProducto = 'Agregar producto';
-    } 
+    }
   }
 
 
-  llenarFormEditar(): void
-  {
+  llenarFormEditar(): void {
     this.formProducto.get('nombreProducto')?.setValue(this.productoAgregarEditar.id);
     this.formProducto.get('nombreProducto')?.setValue(this.productoAgregarEditar.nombreProducto);
     this.formProducto.get('precioProducto')?.setValue(this.productoAgregarEditar.precioProducto);
@@ -116,8 +119,8 @@ soloNumeros: string = '^[0-9]+([.][0-9]+)?$';
   }
 
   ngOnDestroy(): void {
-    if( this.subscription !== null )
-        this.subscription.unsubscribe();
+    if (this.subscription !== null)
+      this.subscription.unsubscribe();
   }
 
 }

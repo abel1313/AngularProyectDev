@@ -19,6 +19,9 @@ export enum UrlApiREST
     OBTENER_VISTAS = "vistas/obtenerVistas",
 
 
+    // Producto
+    OBTENER_PRODUCTOS = 'productos',
+    // Producto
 
     // Peidos
 
@@ -26,5 +29,13 @@ export enum UrlApiREST
     OBTENER_PEDIDO = 'pedidos/obtenerPedidos',
 
     // Pedidos
+
+    // Pedidos vENTA
+    OBTENER_PEDIDO_VENTA = 'pedidosVenta',
+    // Pedidos vENTA
+
+        // Pedidos vENTA
+        OBTENER_CLIENTE_USUARIO = 'clienteUsuario/obtenerClienteUsuario',
+        // Pedidos vENTA
     
 }

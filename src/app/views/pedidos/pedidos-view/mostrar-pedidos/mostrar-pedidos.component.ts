@@ -2,12 +2,13 @@ import { AfterViewInit, Component, NgZone, OnDestroy, OnInit, ViewChild } from '
 import { Router } from '@angular/router';
 import { DataTableDirective } from 'angular-datatables';
 import { Subject, Subscription } from 'rxjs';
-import { 
-  ConfigDatatable, 
-  IPedido, 
-  IResponsePedido, 
-  IRespuestaDTO, 
-  UrlApiREST 
+import {
+  ConfigDatatable,
+  IPedido,
+  IResponsePedido,
+  IRespuestaDTO,
+  Permisos,
+  UrlApiREST
 } from 'src/app/models';
 import { ServicesGenericosService } from 'src/app/service/services-genericos.service';
 
@@ -29,11 +30,14 @@ export class MostrarPedidosComponent implements OnInit, OnDestroy, AfterViewInit
 
   iResponsePedido: Array<IResponsePedido> = [];
 
+
+  permisosMostrar: Array<number> = [];
+
   constructor(
-    private service: ServicesGenericosService, 
-    private ngZone: NgZone, 
+    private service: ServicesGenericosService,
+    private ngZone: NgZone,
     private router: Router
-  ) { 
+  ) {
 
     this.subscription = new Subscription();
 
@@ -41,43 +45,44 @@ export class MostrarPedidosComponent implements OnInit, OnDestroy, AfterViewInit
 
   ngOnInit(): void {
 
-    
+    this.permisosMostrar = Permisos.localStorageSession(localStorage.getItem("session") as any);
+    if (this.permisosMostrar.length === 0) {
+      this.ngZone.run(() => { this.router.navigate(['/sistema']) });
+    }
+
+
     this.dtOptions = ConfigDatatable.dtOptions;
 
-    setTimeout(()=>{
+    setTimeout(() => {
       this.cargarPedidos();
-          },1500 );
+    }, 1500);
 
-          this.subscription.add(this.service.mostrarProductos$.subscribe( (res)=>
-          {
-            this.mostrarAgregarUsuario = res
-          }
-          ));
+    this.subscription.add(this.service.mostrarProductos$.subscribe((res) => {
+      this.mostrarAgregarUsuario = res
+    }
+    ));
 
   }
 
-  cargarPedidos(): void
-  {
-    this.subscription.add( this.service.genericoGet<IRespuestaDTO<Array<IResponsePedido>>>(UrlApiREST.OBTENER_PEDIDO)
-    .subscribe( ( res )=>{
+  cargarPedidos(): void {
+    this.subscription.add(this.service.genericoGet<IRespuestaDTO<Array<IResponsePedido>>>(UrlApiREST.OBTENER_PEDIDO)
+      .subscribe((res) => {
         this.iResponsePedido = res.t;
 
 
-        console.log(this.iResponsePedido )
-      console.log(res.t)
-      this.rerenderTable();  
-      
-    }, err=> console.log(err) ) );
+        console.log(this.iResponsePedido)
+        console.log(res.t)
+        this.rerenderTable();
+
+      }, err => console.log(err)));
   }
 
-  editarPedido( intem: IResponsePedido ): void
-  {
+  editarPedido(intem: IResponsePedido): void {
 
   }
-eliminarPedido( intem: IResponsePedido ): void
-{
+  eliminarPedido(intem: IResponsePedido): void {
 
-}
+  }
 
 
 
@@ -96,7 +101,7 @@ eliminarPedido( intem: IResponsePedido ): void
     // Do not forget to unsubscribe the event
     this.dtTrigger.unsubscribe();
 
-      this.subscription.unsubscribe();
+    this.subscription.unsubscribe();
   }
 
 }

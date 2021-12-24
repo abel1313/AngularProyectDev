@@ -15,14 +15,16 @@ import {MatSelectModule} from '@angular/material/select';
 import { PipeFechaPipe } from './pipe-fecha.pipe';
 import { Patron } from './Patron';
 import { PipeFechaPersonalizadaPipe } from './pipe-fecha-personalizada.pipe';
-
+import {AutocompleteLibModule} from 'angular-ng-autocomplete';
+import { PipeNumerosPipe } from './pipe-numeros.pipe';
 
 
 @NgModule({
   declarations: [ 
     
     PipeFechaPipe, 
-    PipeFechaPersonalizadaPipe,
+    PipeFechaPersonalizadaPipe, 
+    PipeNumerosPipe,
   ],
   imports: [
     CommonModule,
@@ -36,7 +38,8 @@ import { PipeFechaPersonalizadaPipe } from './pipe-fecha-personalizada.pipe';
     MatInputModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatSelectModule
+    MatSelectModule,
+    AutocompleteLibModule
     
     
     
@@ -54,8 +57,9 @@ import { PipeFechaPersonalizadaPipe } from './pipe-fecha-personalizada.pipe';
     MatNativeDateModule,
     MatSelectModule,
     PipeFechaPipe,
-    PipeFechaPersonalizadaPipe
-    
+    PipeFechaPersonalizadaPipe,
+    AutocompleteLibModule,
+    PipeNumerosPipe
     
     
   ]

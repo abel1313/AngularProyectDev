@@ -1,6 +1,8 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable, of, Subscription } from 'rxjs';
+import { Permisos } from 'src/app/models';
 import { ServicesGenericosService } from 'src/app/service/services-genericos.service';
 import { IProducto } from '../../models';
 
@@ -22,14 +24,21 @@ export class ProductosComponent implements OnInit, OnDestroy {
   datos$: Observable<any>;
 
   
+  
+  
+  permisosMostrar: Array<number> = [];
   subscription: Subscription = new Subscription();
-  constructor(private service: ServicesGenericosService) { }
+  constructor(private service: ServicesGenericosService, private router: Router, private _ngZone: NgZone) { }
 
 
   ngOnInit(): void {
 this.eventEditarProduto();
 this.eventMostrarProductoDesdeAgregar();
 
+      this.permisosMostrar = Permisos.localStorageSession(localStorage.getItem("session") as any);
+    if (this.permisosMostrar.length === 0) {
+      this._ngZone.run(() => { this.router.navigate(['/sistema']) });
+    }
 // this.subscription.add( this.service.productos<IProducto>('productos').subscribe((res)=>{
 
 // this.productos$ = of(res);

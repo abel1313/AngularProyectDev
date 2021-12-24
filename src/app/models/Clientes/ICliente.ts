@@ -10,6 +10,15 @@ export interface ICliente extends IBase
 
 }
 
+export interface IClienteDTO
+{
+    id: number
+    nombre: string;
+    apeidos: string;
+    estado: string;
+
+}
+
 
 export class Cliente{
 

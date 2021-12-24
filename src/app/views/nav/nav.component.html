@@ -1,5 +1,5 @@
 <ul ngbNav #nav="ngbNav" [activeId]="2" class="nav-tabs justify-content-center">
-  <li ngbDropdown class="nav-item">
+  <li ngbDropdown class="nav-item" *ngIf="permisosMostrar.includes(3)">
     <a href (click)="false" class="nav-link" ngbDropdownToggle >Clientes</a>
     <div ngbDropdownMenu>
       <button ngbDropdownItem [routerLink]="[ '/clientes']" >Nuevo</button>
@@ -7,7 +7,7 @@
     </div>
   </li>
 
-  <li ngbDropdown class="nav-item">
+  <li ngbDropdown class="nav-item" *ngIf="permisosMostrar.includes(2)">
     <a href (click)="false" class="nav-link" ngbDropdownToggle>Usuarios</a>
     <div ngbDropdownMenu>
       <button ngbDropdownItem ngbDropdownItem [routerLink]="[ '/usuarios']"   > Nuevo</button>
@@ -15,7 +15,17 @@
     </div>
   </li>
 
-    <li ngbDropdown class="nav-item">
+  <li ngbDropdown class="nav-item" *ngIf="permisosMostrar.includes(6)">
+    <a href (click)="false" class="nav-link" ngbDropdownToggle>Empleados</a>
+    <div ngbDropdownMenu>
+      <button ngbDropdownItem ngbDropdownItem [routerLink]="[ '/empleados/nuevo']"   > Nuevo</button>
+      <button ngbDropdownItem [routerLink]="[ '/empleados/mostrar']" >Mostrar</button>
+    </div>
+  </li>
+
+
+
+    <li ngbDropdown class="nav-item" *ngIf="permisosMostrar.includes(1)">
       <a href (click)="false" class="nav-link" ngbDropdownToggle>productos</a>
       <div ngbDropdownMenu>
         <button ngbDropdownItem [routerLink]="[ '/productos'] ">productos</button>
@@ -23,7 +33,7 @@
       </div>
     </li>
 
-    <li ngbDropdown class="nav-item">
+    <li ngbDropdown class="nav-item" *ngIf="permisosMostrar.includes(5)" >
       <a href (click)="false" class="nav-link" ngbDropdownToggle>Pedidos</a>
       <div ngbDropdownMenu>
         <button ngbDropdownItem ngbDropdownItem [routerLink]="[ '/pedidos/nuevo']"   > Nuevo</button>
@@ -32,12 +42,24 @@
     </li>
 
 
-    <li ngbDropdown class="nav-item">
+    <li ngbDropdown class="nav-item" *ngIf="permisosMostrar.includes(4)">
       <a href (click)="false" class="nav-link" ngbDropdownToggle>Ventas</a>
       <div ngbDropdownMenu>
         <button ngbDropdownItem ngbDropdownItem [routerLink]="[ '/venta/nuevo']"   > Nueva</button>
-        <button ngbDropdownItem [routerLink]="[ '/venta/mostrar']"  (click)="mostrarVenta();">Mostrar</button>
+        <button ngbDropdownItem *ngIf="tipoUsuario === 'admin' " [routerLink]="[ '/venta/mostrar']"  (click)="mostrarVenta();">Mostrar</button>
       </div>
+    </li>
+
+    <li ngbDropdown class="nav-item" *ngIf="permisosMostrar.includes(4)" >
+      <p class="nav-link" >Total: ${{ totalVenta }}</p>
+    </li>
+
+    <li ngbDropdown class="nav-item" *ngIf="permisosMostrar.includes(4)">
+      <p class="nav-link" >Usuario: {{ usuarioNav }}</p>
+    </li>
+
+    <li ngbDropdown class="nav-item" >
+      <p class="nav-link fw-bolder text-black" >Tortillería  la salida</p>
     </li>
 
 

@@ -2,7 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Component, Input, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Observable, Subject, Subscription } from 'rxjs';
-import { ConfigDatatable } from 'src/app/models';
+import { ConfigDatatable, Permisos } from 'src/app/models';
 import { ServicesGenericosService } from 'src/app/service/services-genericos.service';
 import Swal from 'sweetalert2';
 import { IProducto, Mensaje } from '../../models';
@@ -23,9 +23,17 @@ export class MostrarProductoComponent implements OnInit, OnDestroy {
   datosProd: IProducto[] = [];
   subscription: Subscription = new Subscription();
 
+  
+  permisosMostrar: Array<number> = [];
+
   constructor( private service: ServicesGenericosService, private router: Router, private _ngZone: NgZone) { }
 
   ngOnInit(): void {
+
+      this.permisosMostrar = Permisos.localStorageSession(localStorage.getItem("session") as any);
+    if (this.permisosMostrar.length === 0) {
+      this._ngZone.run(() => { this.router.navigate(['/sistema']) });
+    }
 
 
     this.dtOptions = ConfigDatatable.dtOptions;

@@ -5,7 +5,7 @@ import { MostrarVentasComponent } from './mostrar-ventas/mostrar-ventas.componen
 
 const routes: Routes = [
 
-  { path: '', component: MostrarVentasComponent },
+  { path: '', component: AgregarEditarVentasComponent },
   { path: 'nuevo', component: AgregarEditarVentasComponent },
   { path: 'mostrar', component: MostrarVentasComponent },
 

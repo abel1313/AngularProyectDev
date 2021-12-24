@@ -1,1 +1,269 @@
-<p>agregar-editar-ventas works!</p>
+
+<div class="row" *ngIf="this.permisosMostrar.includes(4);">
+    <div class="row" *ngIf="pedidoVenta">
+        <div class="col-6">
+            <p class="text-center fw-bolder text-danger">No se cuenta con tortillas en este momento</p>
+            <p class="fw-bolder text-center text-danger">En estos momentos estamos realizando un pedido</p>
+        </div>
+        <div class="col-6 d-flex justify-content-center" *ngIf="pedidoVenta">
+            <button class="btn btn-success d-flex align-content-center"
+                (click)="desbloquearVenta();">Desbloquear</button>
+        </div>
+    </div>
+    <div class="col-6" *ngIf="!pedidoVenta">
+        <div class="card" *ngIf="!ventaMostrar">
+            <div class="card-header">
+                <h1 class="card-title d-flex justify-content-center"> Venta</h1>
+            </div>
+            <div class="card-body">
+
+                <div class="row">
+                    <div class="col-6">
+                        <label for="producto" class="d-flex justify-content-center fw-bolder"> Producto</label>
+                        <ng-autocomplete [data]="iProducto" 
+                        [searchKeyword]="keyworda" 
+                        (selected)='selectEvent($event)'
+                            (inputChanged)='onChangeSearch($event)' 
+                            (inputFocused)='onFocused($event)'
+                            [itemTemplate]="itemTemplate" 
+                            [notFoundTemplate]="notFoundTemplate" 
+                            [(ngModel)]="prodModel">
+                        </ng-autocomplete>
+
+                        <ng-template #itemTemplate let-item>
+                            <a [innerHTML]="item.nombreProducto"></a>
+                        </ng-template>
+
+                        <ng-template #notFoundTemplate let-notFound>
+                            <div [innerHTML]="notFound"></div>
+                        </ng-template>
+                    </div>
+
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="producto"  class="d-flex justify-content-center fw-bolder"> Ingrese
+                                cantidad</label>
+
+                            <input type="text" [(ngModel)]="cantidadVenta" name="cantidadVenta" class="form-control" placeholder="Cantidad" #cantidad>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="row">
+                    <div class="col-3">
+                        <button [disabled]='pedidoVenta' class="btn btn-success" (click)="pedido();"> Pedido</button>
+                    </div>
+
+                    <div class="col-6">
+                        <button *ngIf="bloquearDetalle" class="btn btn-info col-12" (click)="mostrarDetalle();">mostrar detalle</button>
+                    </div>
+
+                    <div class="col-3 d-flex justify-content-end">
+                        <button class="btn btn-success" (click)="agregarVenta(cantidad.value);"> Agregar</button>
+                    </div>
+
+                </div>
+                <div class="row mt-3">
+                    <div class="col-6"></div>
+                    <div class="col-6 d-flex justify-content-end">
+                        <button class="btn btn-success" (click)="realizarPedido();">
+                            Realizar pedido
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<div class="row" *ngIf="!pedidoVenta">
+    <div class="col-12 border" *ngIf="!ventaMostrar">
+        <table class="table table-hover" *ngIf="this.permisosMostrar.includes(4)">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Precio</th>
+                    <th>Kilos</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of detalleCarrito">
+                    <td>{{ item.nombreProducto }}</td>
+                    <td> {{ item.precioProducto }} </td>
+                    <td>{{ item.cantidadProducto }}</td>
+                    <td> {{ item.subtotalProducto }} </td>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th></th>
+                    <th> Total </th>
+                    <th class="d">${{ totalDetalle }}</th>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="row" *ngIf="realizarVentaMostrar">
+    <div class="col-6">
+        <div class="card">
+            <div class="card-header">
+                <h1 class="fw-bolder text-center">Realizar venta</h1>
+            </div>
+            <div class="card-body">
+                <form [formGroup]='datosVentaFormGroup' (ngSubmit)='guardarRealizarPago()'>
+
+                <div class="row" *ngIf="tipoUsuario === 'admin' ">
+                    <div class="col-6">
+                        <label for="producto" class="d-flex justify-content-center fw-bolder"> Usuario </label>
+                        <ng-autocomplete [data]="dataUsuario" 
+                        [searchKeyword]="keywordUsuario" 
+                        formControlName="usuarioVenta"
+                            [itemTemplate]="itemTemplate" 
+                            [notFoundTemplate]="notFoundTemplate" >
+                        </ng-autocomplete>
+
+                        <ng-template #itemTemplate let-item>
+                            <a [innerHTML]="item.nombreUsuario"></a>
+                        </ng-template>
+
+                        <ng-template #notFoundTemplate let-notFound>
+                            <div [innerHTML]="notFound"></div>
+                        </ng-template>
+                    </div>
+                    <div class="col-6">
+                        <label for="cliente" class="d-flex justify-content-center fw-bolder"> Cliente </label>
+                        <ng-autocomplete [data]="dataCliente" 
+                        [searchKeyword]="keywordCliente" 
+                        formControlName="clienteVenta"
+                            [itemTemplate]="itemTemplateCliente" 
+                            [notFoundTemplate]="notFoundTemplateCliente" >
+                        </ng-autocomplete>
+
+                        <ng-template #itemTemplateCliente let-item>
+                            <a [innerHTML]="item.nombreCliente"></a>
+                        </ng-template>
+
+                        <ng-template #notFoundTemplateCliente let-notFound>
+                            <div [innerHTML]="notFound"></div>
+                        </ng-template>
+
+                    </div>
+                </div>
+
+                <div class="row" *ngIf="tipoUsuario !== 'admin' ">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="usuId">Usuario</label>
+                            <input type="text" class="form-control" name="" id="usuId" placeholder="" 
+                             formControlName="usuarioInput">
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="clienteI">Cliente</label>
+                            <input type="text" class="form-control" name="" id="clienteI" placeholder="" 
+                             formControlName="clienteInput">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="totalVenta" class="fw-bolder d-flex justify-content-center">Total Venta</label>
+                            <input type="text" class="form-control text-center"  id="totalVenta"  
+                            name=""
+                            [pattern]="soloLetras" required min="0"
+                            formControlName="totalVenta" >
+
+                            
+                            <div *ngIf="datosVentaFormGroup.get('totalVenta')?.invalid && 
+                            (datosVentaFormGroup.get('totalVenta')?.dirty || 
+                            datosVentaFormGroup.get('totalVenta')?.touched)">
+
+                            <div class="text-center"
+                                *ngIf="datosVentaFormGroup.get('totalVenta')?.errors?.required">
+                                El total es requerido.
+                            </div>
+
+                            <div class="text-center"
+                                *ngIf="datosVentaFormGroup.get('totalVenta')?.errors?.pattern">
+                                Ingrese solo numeros.
+                            </div>
+
+                            <div class="text-center"
+                                *ngIf="datosVentaFormGroup.get('totalVenta')?.errors?.min">
+                                Em mínimo de caracteres es de {{ minimoCarcateres }}.
+                            </div>
+                        </div>
+
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <label for="pagarCon" class="fw-bolder d-flex justify-content-center">Pagar con</label>
+                            <input type="text" class="form-control" id="pagarCon" #pag
+                            (keyup)="pagarConKey(pag.value);"
+                            name="pagarCon" placeholder="$0"
+                            [pattern]="soloNumeros" required  min="0" title="Golas"
+                            formControlName="pagarCon" value="{{ datosVentaFormGroup.get('pagarCon')?.value | pipeNumeros}}">
+                            <div *ngIf="datosVentaFormGroup.get('pagarCon')?.invalid && 
+                            (datosVentaFormGroup.get('pagarCon')?.dirty || 
+                            datosVentaFormGroup.get('pagarCon')?.touched)">
+
+                            <div class="text-center"
+                                *ngIf="datosVentaFormGroup.get('pagarCon')?.errors?.required">
+                                Es requerido.
+                            </div>
+
+                            <div class="text-center"
+                                *ngIf="datosVentaFormGroup.get('pagarCon')?.errors?.pattern">
+                                Ingrese solo numeros.
+                            </div>
+
+                            <div class="text-center"
+                                *ngIf="datosVentaFormGroup.get('pagarCon')?.errors?.min">
+                                Em mínimo de caracteres es de {{ minimoCarcateres }}.
+                            </div>
+
+                        </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-6 d-flex justify-content-center">
+                        <p class="fw-bolder d-flex align-items-center">Cambio</p>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <input type="text" class="form-control" formControlName="cambio" >
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+
+                    <div class="col-6 d-flex justify-content-end">
+                        <button class="btn btn-success" *ngIf="this.permisosMostrar.includes(4)" (click)="btnRealizarPedidoVenta();" [disabled]="!disabledRelizarPedidoVenta" type="button">{{ realizarPedidoVenta }}</button>
+                    </div>
+
+
+                    <div class="col-6 d-flex justify-content-end">
+                        <button class="btn btn-success" type="submit" *ngIf="this.permisosMostrar.includes(5)" [disabled]="!datosVentaFormGroup.valid" >{{ realizarPago }}</button>
+                    </div>
+                </div>
+
+            </form>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -2,7 +2,7 @@ import { Component, Input, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { Cliente, ICliente, IDatosMostrar, IMensajeRespuesta, IRespuestaDTO, MensajeFactory, UrlApiREST } from 'src/app/models';
+import { Cliente, ICliente, IDatosMostrar, IMensajeRespuesta, IRespuestaDTO, MensajeFactory, Permisos, UrlApiREST } from 'src/app/models';
 import { IDireccion } from 'src/app/models/Clientes/IDireccion';
 import { IPersona } from 'src/app/models/Clientes/IPersona';
 import { ServicesGenericosService } from 'src/app/service/services-genericos.service';
@@ -39,6 +39,7 @@ export class AgregarEditarLientesComponent implements OnInit, OnDestroy {
   tituloDireccionCliente: string = 'Nueva dirección del cliente';
 
 
+  permisosMostrar: Array<number> = [];
 
   constructor(
     private fb: FormBuilder, 
@@ -87,7 +88,11 @@ export class AgregarEditarLientesComponent implements OnInit, OnDestroy {
 
 this.obtenerClienteEditar();
 
-
+       this.permisosMostrar = Permisos.localStorageSession( localStorage.getItem("session") as any);
+    if(this.permisosMostrar.length === 0)
+    {
+      this.ngZone.run(()=>{this.router.navigate(['/sistema'])});
+    }
 
   }
 

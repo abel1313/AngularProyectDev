@@ -1,7 +1,15 @@
+export {
+    Permisos
+} from "./Permisos/IPermisos";
+
+export {
+    IPedidoVenta
+} from "./PedidoVenta/IPedidoVenta";
+
 export { IResponsePedido } from "./Pedidos/IResponsePedido";
 
-export { 
-    IVenta 
+export {
+    IVenta
 } from "./Venta/IVenta";
 
 export {
@@ -20,7 +28,7 @@ export {
 
 export { IDireccion, IPersona } from "./Persona";
 
-export { ICliente, IDatosMostrar, Cliente } from "../models/Clientes/ICliente";
+export { ICliente, IDatosMostrar, Cliente, IClienteDTO } from "../models/Clientes/ICliente";
 
 export { UrlApiREST } from './urls/UrlApiREST';
 export { ConfigDatatable } from './urls/ConfigDatatable';
@@ -32,7 +40,8 @@ export {
     IVista,
     InicializarUsuario,
     IUsuarioRespuesta,
-    IRegistrarUsuario
+    IRegistrarUsuario,
+    IClienteUsuario
 } from '../models/Usuario/IUsuario';
 
 export class aa {

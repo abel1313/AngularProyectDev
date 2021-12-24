@@ -3,15 +3,15 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { EventEmitter, Injectable } from '@angular/core';
 import { Observable,throwError } from 'rxjs';
 import { catchError, map, retry } from 'rxjs/operators';
-import { ICliente, IDatosMostrar, IRespuestaDTO, IVista, IVistaCheck } from '../models';
-import { IProducto } from '../views/models';
+import { ICliente, IDatosMostrar, IPermisos, IRespuestaDTO, IUsuarioRespuesta, IVista, IVistaCheck } from '../models';
+import { IProducto, IProductoPersonalizado } from '../views/models';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ServicesGenericosService {
 
-  url: string = 'http://192.168.56.1:8080/proyecto';
+  url: string = 'http://localhost:8080/proyecto';
 
   editarProducto$ = new EventEmitter<string>();
   editarProductoAgregar$ = new EventEmitter<IProducto>();
@@ -20,9 +20,14 @@ export class ServicesGenericosService {
 
   mostrarEditarCliente$ = new EventEmitter<IDatosMostrar>();
 
+  totalNav$ = new EventEmitter<number>();
+  
+  permisos$ = new EventEmitter<Array<IUsuarioRespuesta>>();
+
+
   constructor( private http: HttpClient ) { }
 
-   httpOptions = {
+   private httpOptions = {
     headers: new HttpHeaders({
       'Content-Type':  'application/json',
       Authorization: 'my-auth-token'
@@ -57,6 +62,30 @@ export class ServicesGenericosService {
       catchError(this.handleError)
     );
   }
+
+  getProductoPersonalizado(url: string): Observable<Array<IProducto>>{
+    return this.http.get<Array<IProducto>>(`${this.url}/${url}`)
+    .pipe(
+      // map(this.productosAutoComplete),
+      retry(2),
+      catchError(this.handleError)
+    );
+  }
+  private productosAutoComplete( producto : Array<IProducto>): Array<IProductoPersonalizado>
+  {
+    let productoPer: Array<IProductoPersonalizado> =  producto.map((producto)=>{
+      const productoPersonalizado:IProductoPersonalizado = 
+      {
+        id: producto.id,
+        nombreProducto: producto.nombreProducto  
+      }
+      return productoPersonalizado;
+    });
+    return productoPer;
+
+  }
+
+
   genericoPost<T,R>(url: string, t: T): Observable<R>{
     return this.http.post<R>(`${this.url}/${url}`, t)
     .pipe(
@@ -84,7 +113,7 @@ export class ServicesGenericosService {
      return this.http.delete<R>(`${this.url}/${url}/${id}`);
   }
 
-  buscarId<R>( id: number,url: string): Observable<R>{
+    buscarId<R>( id: number,url: string): Observable<R>{
     return this.http.get<R>(`${this.url}/${url}/${id}`)
     .pipe(
       retry(2),

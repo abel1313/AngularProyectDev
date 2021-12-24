@@ -14,6 +14,11 @@ const routes: Routes =
     .then(pedido => pedido.PedidosModule)
   },
   {
+    path: 'empleados',
+    loadChildren: () => import('../app/views/empleados/empleados.module')
+    .then(empleado => empleado.EmpleadosModule)
+  },
+  {
     path: 'venta',
     loadChildren: () => import('../app/views/venta/venta.module')
     .then(venta => venta.VentaModule)

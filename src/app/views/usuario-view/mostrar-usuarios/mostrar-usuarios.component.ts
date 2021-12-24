@@ -2,7 +2,7 @@ import { AfterViewInit, Component, NgZone, OnDestroy, OnInit, ViewChild } from '
 import { Router } from '@angular/router';
 import { DataTableDirective } from 'angular-datatables';
 import { Observable, of, Subject, Subscription } from 'rxjs';
-import { ConfigDatatable, IRespuestaDTO, IUsuario, IUsuarioRespuesta, UrlApiREST } from 'src/app/models';
+import { ConfigDatatable, IRespuestaDTO, IUsuario, IUsuarioRespuesta, Permisos, UrlApiREST } from 'src/app/models';
 import { ServicesGenericosService } from 'src/app/service/services-genericos.service';
 import { Mensaje } from '../../models';
 
@@ -27,6 +27,7 @@ export class MostrarUsuariosComponent implements OnInit, AfterViewInit, OnDestro
 
 
 
+  permisosMostrar: Array<number> = [];
   mostrarAgregarUsuario: Boolean = false;
   usuarioEditar: IUsuarioRespuesta;
 
@@ -34,7 +35,10 @@ export class MostrarUsuariosComponent implements OnInit, AfterViewInit, OnDestro
 
 
   ngOnInit(): void {
-
+      this.permisosMostrar = Permisos.localStorageSession(localStorage.getItem("session") as any);
+    if (this.permisosMostrar.length === 0) {
+      this.ngZone.run(() => { this.router.navigate(['/sistema']) });
+    }
     this.dtOptions = ConfigDatatable.dtOptions;
     
     setTimeout(()=>{

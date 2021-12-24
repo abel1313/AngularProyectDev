@@ -1,3 +1,4 @@
+import { ICliente } from ".."
 import { IBase } from "../Clientes/IBase"
 
 
@@ -16,6 +17,15 @@ export class InicializarUsuario
 		contrasenaUsuario: '',
 		nombreUsuario: ''
     }
+	public static inicializarClienteUsuario: IClienteUsuario =
+	{
+		usuario:
+		{
+			id: 0,
+			nombreUsuario: '',
+			permisos:[]
+		}
+	}
 
 }
 
@@ -26,7 +36,7 @@ export interface IRegistrarUsuario
 	contrasenaUsuario: string;
 	nombreUsuario: string;
 }
-export interface IUsuario
+export interface IUsuario extends IBase
 {
 
 	nombreUsuario: string;
@@ -49,4 +59,11 @@ export interface IPermisos
 export interface IVista extends IBase
 {
 	nombreVista: string;
+}
+
+
+export interface IClienteUsuario extends IBase
+{
+	usuario: IUsuarioRespuesta;
+	cliente?: ICliente;
 }

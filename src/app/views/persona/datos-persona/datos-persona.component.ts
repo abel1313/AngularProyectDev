@@ -1,5 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, NgZone, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { Permisos } from 'src/app/models';
+import { ServicesGenericosService } from 'src/app/service/services-genericos.service';
 
 @Component({
   selector: 'app-datos-persona',
@@ -18,8 +21,14 @@ export class DatosPersonaComponent implements OnInit {
  
   tituloPersona: string = 'Datos personales';
 
+  permisosMostrar: Array<number> = [];
 
-  constructor( private fb: FormBuilder ) { }
+  constructor( 
+    private fb: FormBuilder,
+    private service: ServicesGenericosService,
+    private ngZone: NgZone,
+    private router: Router
+     ) { }
 
   ngOnInit(): void {
 
@@ -30,6 +39,10 @@ export class DatosPersonaComponent implements OnInit {
     if(this.formPersonaCliente.valid)
     {
       console.log('valido ')
+    }
+        this.permisosMostrar = Permisos.localStorageSession(localStorage.getItem("session") as any);
+    if (this.permisosMostrar.length === 0) {
+      this.ngZone.run(() => { this.router.navigate(['/sistema']) });
     }
   }
 

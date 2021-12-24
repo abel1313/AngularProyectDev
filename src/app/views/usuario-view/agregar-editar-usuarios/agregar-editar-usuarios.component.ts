@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable, of, Subscription } from 'rxjs';
 import { map, mapTo } from 'rxjs/operators';
-import { ICliente, IMensajeRespuesta, InicializarUsuario, IPermisos, IRegistrarUsuario, IRespuestaDTO, IUsuario, IUsuarioRespuesta, IVista, IVistaCheck, MensajeFactory, UrlApiREST } from 'src/app/models';
+import { ICliente, IMensajeRespuesta, InicializarUsuario, IPermisos, IRegistrarUsuario, IRespuestaDTO, IUsuario, IUsuarioRespuesta, IVista, IVistaCheck, MensajeFactory, Permisos, UrlApiREST } from 'src/app/models';
 import { ServicesGenericosService } from 'src/app/service/services-genericos.service';
 import { Mensaje } from '../../models';
 
@@ -31,6 +31,9 @@ export class AgregarEditarUsuariosComponent implements OnInit, OnDestroy {
   ocultarPermisos: Boolean = false;
   iVista: Array<IVistaCheck> = [];
 
+  
+  permisosMostrar: Array<number> = [];
+
 
   seleccionarCheckGuardar: Array<IVistaCheck> = [];
 
@@ -43,6 +46,11 @@ export class AgregarEditarUsuariosComponent implements OnInit, OnDestroy {
 
 
   ngOnInit(): void {
+
+          this.permisosMostrar = Permisos.localStorageSession(localStorage.getItem("session") as any);
+    if (this.permisosMostrar.length === 0) {
+      this.ngZone.run(() => { this.router.navigate(['/sistema']) });
+    }
 
     this.ocultarPermisos = this.router.url === '/sistema/registrar' ? true: false;
 
