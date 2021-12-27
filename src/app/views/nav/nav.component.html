@@ -2,8 +2,9 @@
   <li ngbDropdown class="nav-item" *ngIf="permisosMostrar.includes(3)">
     <a href (click)="false" class="nav-link" ngbDropdownToggle >Clientes</a>
     <div ngbDropdownMenu>
-      <button ngbDropdownItem [routerLink]="[ '/clientes']" >Nuevo</button>
-      <button ngbDropdownItem [routerLink]="[ '/clientes/mostrar']" (click)="mostrarClientes();" >Mostrar</button>
+      <button *ngIf="tipoUsuario === 'admin' " ngbDropdownItem [routerLink]="[ '/clientes']" >Nuevo</button>
+      <button *ngIf="tipoUsuario === 'admin' " ngbDropdownItem [routerLink]="[ '/clientes/mostrar']" (click)="mostrarClientes();" >Mostrar</button>
+      <button *ngIf="tipoUsuario !== 'admin' " ngbDropdownItem [routerLink]="[ '/clientes/datos']" >Mis datos</button>
     </div>
   </li>
 
@@ -59,10 +60,15 @@
     </li>
 
     <li ngbDropdown class="nav-item" >
-      <p class="nav-link fw-bolder text-black" >Tortillería  la salida</p>
+      <p class="nav-link fw-bolder text-black" *ngIf="usuarioNav !== ''; else mostrarTortilleria ">{{usuarioNav}} <a href="#" (click)="salir($event)">Salir</a> </p>
     </li>
 
 
   </ul>
   
   <div [ngbNavOutlet]="nav" class="mt-2"></div>
+
+  <ng-template #mostrarTortilleria>
+    <p class="fw-bolder pt-2">Tortillería  la salida</p>
+  </ng-template>
+  

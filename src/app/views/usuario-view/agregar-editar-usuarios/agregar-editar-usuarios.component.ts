@@ -13,7 +13,7 @@ import { Mensaje } from '../../models';
   styleUrls: ['./agregar-editar-usuarios.component.scss']
 })
 export class AgregarEditarUsuariosComponent implements OnInit, OnDestroy {
-@Input() enviarUsuarioEditar: IUsuarioRespuesta;
+  @Input() enviarUsuarioEditar: IUsuarioRespuesta;
 
 
   subscription: Subscription;
@@ -31,7 +31,7 @@ export class AgregarEditarUsuariosComponent implements OnInit, OnDestroy {
   ocultarPermisos: Boolean = false;
   iVista: Array<IVistaCheck> = [];
 
-  
+
   permisosMostrar: Array<number> = [];
 
 
@@ -47,38 +47,39 @@ export class AgregarEditarUsuariosComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
 
-          this.permisosMostrar = Permisos.localStorageSession(localStorage.getItem("session") as any);
-    if (this.permisosMostrar.length === 0) {
-      this.ngZone.run(() => { this.router.navigate(['/sistema']) });
+    console.log( this.router.url)
+    if( this.router.url !== '/sistema/registrar' )
+    {
+      this.permisosMostrar = Permisos.localStorageSession(localStorage.getItem("session") as any);
+      if (this.permisosMostrar.length === 0) {
+        this.ngZone.run(() => { this.router.navigate(['/sistema']) });
+      }
+  
+      this.ocultarPermisos = this.router.url === '/sistema/registrar' ? true : false;
+  
+      if (this.enviarUsuarioEditar !== null) {
+        if (this.enviarUsuarioEditar !== null && this.enviarUsuarioEditar !== undefined) {
+          this.datosUsuarioFormGroup.get('nombreUsuario')?.setValue(this.enviarUsuarioEditar.nombreUsuario);
+        }
+  
+      }
+      this.cargarVistas();
     }
-
-    this.ocultarPermisos = this.router.url === '/sistema/registrar' ? true: false;
-
     this.datosUsuarioFormGroup = this.fb.group({
       nombreUsuario: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(10)]],
       contrasenaUsuario: ['', [Validators.required, Validators.minLength(3)]],
       confirmarContrasenaUsuario: ['', [Validators.required, Validators.minLength(3)]],
     });
+  
 
-    if(this.enviarUsuarioEditar !== null )
-    {
-      if( this.enviarUsuarioEditar !== null && this.enviarUsuarioEditar !== undefined )
-      {
-        this.datosUsuarioFormGroup.get('nombreUsuario')?.setValue( this.enviarUsuarioEditar.nombreUsuario);
-      }
-        
-    }
-    this.cargarVistas();
-    
   }
 
 
-  iniciarSesion(): void
-  {
-    this.ngZone.run(()=>{
+  iniciarSesion(): void {
+    this.ngZone.run(() => {
       this.router.navigate(['sistema']);
     });
-    
+
   }
 
   seleccionarCheck(item: IVistaCheck, check: any, i: number): void {
@@ -89,7 +90,6 @@ export class AgregarEditarUsuariosComponent implements OnInit, OnDestroy {
       this.iVista[i].isCheck = false;
     }
 
-    console.log(this.iVista, ' vista sola ')
   }
   cargarVistas(): void {
     this.subscription.add(this.service.obtenerVistas(UrlApiREST.OBTENER_VISTAS).subscribe((res) => {
@@ -154,7 +154,7 @@ export class AgregarEditarUsuariosComponent implements OnInit, OnDestroy {
               Mensaje.mensaje('Mensaje', `${mostrarMensaje}`, 'success', 'Aceptar');
 
               this.datosUsuarioFormGroup.reset();
-              this.cargarVistas();
+              this.ocultarPermisos  = true; 
 
             } else {
               this.load = false;
@@ -174,9 +174,7 @@ export class AgregarEditarUsuariosComponent implements OnInit, OnDestroy {
     }
   }
   ngOnDestroy(): void {
-    if (this.subscription !== null)
-    {
-      console.log(' entro agregar')
+    if (this.subscription !== null) {
       this.subscription.unsubscribe();
     }
   }

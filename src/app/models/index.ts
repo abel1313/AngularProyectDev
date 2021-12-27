@@ -9,7 +9,9 @@ export {
 export { IResponsePedido } from "./Pedidos/IResponsePedido";
 
 export {
-    IVenta
+    IVenta,
+    Venta,
+    IDetalleVenta
 } from "./Venta/IVenta";
 
 export {
@@ -26,9 +28,19 @@ export {
     MensajeFactory
 } from "./RespuestaDTO";
 
-export { IDireccion, IPersona } from "./Persona";
+export { 
+    IDireccion,
+    Persona,
+    IPersonaSin 
+} from "./Persona";
 
-export { ICliente, IDatosMostrar, Cliente, IClienteDTO } from "../models/Clientes/ICliente";
+export { 
+    ICliente, 
+    IDatosMostrar, 
+    Cliente, 
+    IClienteDTO,
+    IBuscarId,
+} from "../models/Clientes/ICliente";
 
 export { UrlApiREST } from './urls/UrlApiREST';
 export { ConfigDatatable } from './urls/ConfigDatatable';

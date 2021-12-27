@@ -41,11 +41,18 @@ export class MostrarClientesComponent implements OnInit, AfterViewInit, OnDestro
 
   mostrarAgregarEditar: Boolean = false;
 
+  tipoUsuario: string = '';
 
   subscription: Subscription;
   ngOnInit(): void {
 
            this.permisosMostrar = Permisos.localStorageSession( localStorage.getItem("session") as any);
+           this.tipoUsuario = Permisos.tipoUsuario(this.permisosMostrar);
+           if( this.tipoUsuario !== 'admin' )
+           {
+            this.ngZone.run(()=>{this.router.navigate(['/venta'])});
+           }
+    
     if(this.permisosMostrar.length === 0)
     {
       this.ngZone.run(()=>{this.router.navigate(['/sistema'])});
@@ -54,11 +61,15 @@ export class MostrarClientesComponent implements OnInit, AfterViewInit, OnDestro
     this.dtOptions = ConfigDatatable.dtOptions;
 
 
-    setTimeout(()=>{
-this.cargarClientes();
-    },1500 );
+    if( this.tipoUsuario === 'admin' )
+    {
+      setTimeout(()=>{
+        this.cargarClientes();
+            },1500 );
+        
+            this.mostrarDatosNav();
+    }
 
-    this.mostrarDatosNav()
   }
 
  

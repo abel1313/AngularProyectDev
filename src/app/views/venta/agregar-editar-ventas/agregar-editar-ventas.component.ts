@@ -2,11 +2,12 @@ import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { ICliente, IClienteDTO, IClienteUsuario, IPedidoVenta, IRespuestaDTO, IUsuario, IUsuarioRespuesta, Permisos, UrlApiREST } from 'src/app/models';
+import { Cliente, ICliente, IClienteDTO, IClienteUsuario, IDetalleVenta, IMensajeRespuesta, InicializarUsuario, IPedidoVenta, IRespuestaDTO, IUsuario, IUsuarioRespuesta, IVenta, MensajeFactory, Permisos, UrlApiREST, Venta } from 'src/app/models';
 import { ServicesGenericosService } from 'src/app/service/services-genericos.service';
-import { PipeNumerosPipe } from 'src/app/shared/pipe-numeros.pipe';
+import { PipeFechaPipe } from 'src/app/shared/pipe-fecha.pipe';
+
 import Swal from 'sweetalert2';
-import { IDetalleVenta, IDetalleVentaMostrar, InicializarVenta, IProducto, IProductoPersonalizado, Mensaje } from '../../models';
+import { IDetalleVentaMostrar, InicializarVenta, IProducto, Mensaje } from '../../models';
 
 @Component({
   selector: 'app-agregar-editar-ventas',
@@ -25,6 +26,8 @@ export class AgregarEditarVentasComponent implements OnInit, OnDestroy {
 
   ngModelUsuaio: any;
   ngModelCliente: any;
+
+  nuevoCarrito: Array<IProducto> = [];
 
 
 
@@ -52,6 +55,8 @@ export class AgregarEditarVentasComponent implements OnInit, OnDestroy {
   productoInicio: IProducto;
 
   prodModel: IProducto = InicializarVenta.incializarProducto;
+  usuarioModel: IUsuarioRespuesta = InicializarUsuario.inicializarUsuarioRespuesta;
+  clienteModel: ICliente = Cliente.incializarCliente;
 
   bloquearDetalle: Boolean = false;
 
@@ -80,6 +85,27 @@ export class AgregarEditarVentasComponent implements OnInit, OnDestroy {
 
   };
 
+  keyworda = 'nombreProducto';
+
+  keywordUsuario = 'nombreUsuario';
+  dataUsuario: Array<IUsuarioRespuesta> = [];
+
+
+  keywordCliente = 'nombreCliente';
+  dataCliente: Array<ICliente> = [];
+
+  data = [
+    {
+      id: 1,
+      name: 'Usa'
+    },
+    {
+      id: 2,
+      name: 'England'
+    }
+  ];
+
+  usuarioSesion: Array<IUsuarioRespuesta>  = [];
 
 
   ngOnInit(): void {
@@ -98,9 +124,11 @@ export class AgregarEditarVentasComponent implements OnInit, OnDestroy {
 
     this.cargarProducto();
     this.mostrarBloqueoVenta();
-this.cargarClientes();
+    this.cargarClientes();
 
     this.permisosMostrar = Permisos.localStorageSession(localStorage.getItem("session") as any);
+
+    this.usuarioSesion = JSON.parse(localStorage.getItem("session") as any);
 
     this.tipoUsuario = Permisos.tipoUsuario(this.permisosMostrar);
     if (this.permisosMostrar.length === 0) {
@@ -110,28 +138,143 @@ this.cargarClientes();
 
   }
 
-  pagarConKey(pagar: string)
-  {
-    let pagarSin: number = parseFloat(pagar.replace('$',''));
+  pagarConKey(pagar: string) {
+    let pagarSin: number = parseFloat(pagar.replace('$', ''));
     let total: string = this.datosVentaFormGroup.get('totalVenta')?.value;
-    let totalPag: number = parseFloat(total.replace('$',''));
-    let enviarTotal: number = pagarSin - totalPag; 
+    let totalPag: number = parseFloat(total.replace('$', ''));
+    let enviarTotal: number = pagarSin - totalPag;
 
     console.log(enviarTotal, ' eniar');
-    if( pagarSin > totalPag )
-    {
+    if (pagarSin > totalPag) {
       this.disabledRelizarPedidoVenta = true;
-    this.datosVentaFormGroup.get('cambio')?.setValue(`$${enviarTotal}`);
-    }else
-    {
+      this.datosVentaFormGroup.get('cambio')?.setValue(`$${enviarTotal}`);
+    } else {
       this.disabledRelizarPedidoVenta = false;
     }
-    
+
   }
 
   btnRealizarPedidoVenta(): void {
 
-    console.log(' datos ', this.datosVentaFormGroup.value);
+    if (this.tipoUsuario !== 'admin') {
+      if (
+        this.datosVentaFormGroup.get('usuarioInput')?.value !== '' &&
+        this.datosVentaFormGroup.get('usuarioInput')?.value !== null &&
+
+        this.datosVentaFormGroup.get('clienteInput')?.value !== '' &&
+        this.datosVentaFormGroup.get('clienteInput')?.value !== null &&
+
+        this.datosVentaFormGroup.get('totalVenta')?.value !== '' &&
+        this.datosVentaFormGroup.get('totalVenta')?.value !== null &&
+
+        this.datosVentaFormGroup.get('pagarCon')?.value !== '' &&
+        this.datosVentaFormGroup.get('pagarCon')?.value !== null
+      ) {
+
+      } else {
+        Mensaje.mensaje('Mensaje', 'Datos incompletos', 'info', 'Aceptar');
+      }
+    } else if (this.tipoUsuario === 'admin') {
+      if (
+        this.datosVentaFormGroup.get('usuarioVenta')?.value !== '' &&
+
+        this.datosVentaFormGroup.get('clienteVenta')?.value !== '' &&
+
+        this.datosVentaFormGroup.get('totalVenta')?.value !== '' &&
+
+        this.datosVentaFormGroup.get('pagarCon')?.value !== ''
+      ) {
+        let detallePedido: IDetalleVenta = this.obtenerDatosVenta();
+        this.load = true;
+        this.subscription.add
+          (
+            this.service.genericoPost<IDetalleVenta, IRespuestaDTO<any>>
+              (UrlApiREST.PEDIDO_DETALLE_GUARDAR, detallePedido)
+              .subscribe((res) => {
+                console.log(res, ' pasando');
+                let codigoRespuesta: IMensajeRespuesta = null as any;
+                let mostrarMensaje: string = null as any;
+
+                if (res.code === '200 OK') {
+                  this.load = false;
+                  codigoRespuesta = MensajeFactory.obtenereMensaje(res.codeValue);
+                  mostrarMensaje = codigoRespuesta.mostrarMensaje(res);
+
+                  Mensaje.mensaje('Mensaje', `${mostrarMensaje}`, 'success', 'Aceptar');
+
+                  // this.datosVentaFormGroup.reset();
+                  this.realizarVentaMostrar = false;
+                  this.pedidoVenta = false;
+                  this.ventaMostrar = false;
+                  this.carrito = {};
+                  this.detalleCarrito = [];
+                  this.nuevoCarrito = [];
+                  this.prodModel = InicializarVenta.incializarProducto;
+                  this.bloquearDetalle = false;
+                  this.cantidadVenta = '';
+                  this.usuarioModel = InicializarUsuario.inicializarUsuarioRespuesta;
+                  this.clienteModel = Cliente.incializarCliente;
+                  this.datosVentaFormGroup.get('usuarioVenta')?.setValue(this.usuarioModel);
+                  this.datosVentaFormGroup.get('clienteVenta')?.setValue(this.clienteModel);
+                  this.datosVentaFormGroup.get('totalVenta')?.setValue('');
+                  this.datosVentaFormGroup.get('pagarCon')?.setValue('');
+                  this.datosVentaFormGroup.get('cambio')?.setValue('');
+
+
+                  this.cargarProducto();
+
+                } else {
+                  this.load = false;
+                  Mensaje.mensaje('Mensaje', `Error al guardar un cliente`, 'success', 'Aceptar');
+                }
+
+
+              }, (error) => {
+
+                this.load = false;
+              }));
+
+
+      } else {
+        Mensaje.mensaje('Mensaje', 'Datos incompletosadmin', 'info', 'Aceptar');
+      }
+    }
+
+  }
+
+  obtenerDatosVenta(): IDetalleVenta {
+    let total: string = '';
+    let totalSinSigno: number = 0;
+    let datosAdmin: IVenta = Venta.inicializarVenta;
+
+
+    total = this.datosVentaFormGroup.get('totalVenta')?.value;
+    totalSinSigno = parseFloat(total.replace('$', ''));
+    datosAdmin = Venta.inicializarVenta;
+
+    datosAdmin.fechaVenta = new PipeFechaPipe().transform(new Date());
+    datosAdmin.totalVenta = totalSinSigno;
+
+    if (this.tipoUsuario !== 'admin') {
+      datosAdmin.usuario = this.datosVentaFormGroup.get('usuarioInput')?.value;
+      datosAdmin.cliente = this.datosVentaFormGroup.get('clienteInput')?.value;
+    } else if (this.tipoUsuario === 'admin') {
+      datosAdmin.usuario = this.datosVentaFormGroup.get('usuarioVenta')?.value;
+      datosAdmin.cliente = this.datosVentaFormGroup.get('clienteVenta')?.value;
+    }
+    let detalleVenta: IDetalleVenta =
+    {
+      venta: datosAdmin,
+      producto: this.nuevoCarrito,
+      subtotalDetalle: 0,
+      precioDetalle: 0,
+      kilosDetalle: 0
+    }
+
+    return detalleVenta;
+  }
+  guardarRealizarPago(): void {
+
     if (this.tipoUsuario !== 'admin') {
       if (
         this.datosVentaFormGroup.get('usuarioInput')?.value !== '' &&
@@ -161,13 +304,79 @@ this.cargarClientes();
         this.datosVentaFormGroup.get('pagarCon')?.value !== ''
       ) {
 
+
+        let total: string = this.datosVentaFormGroup.get('totalVenta')?.value;
+        let totalSinSigno: number = parseFloat(total.replace('$', ''));
+        let datosAdmin: IVenta = Venta.inicializarVenta;
+        datosAdmin.fechaVenta = new PipeFechaPipe().transform(new Date());
+        datosAdmin.totalVenta = totalSinSigno;
+        datosAdmin.usuario = this.datosVentaFormGroup.get('usuarioVenta')?.value;
+        datosAdmin.cliente = this.datosVentaFormGroup.get('clienteVenta')?.value;
+        let detalleVenta: IDetalleVenta =
+        {
+          venta: datosAdmin,
+          producto: this.nuevoCarrito,
+          subtotalDetalle: 0,
+          precioDetalle: 0,
+          kilosDetalle: 0
+        }
+
+        this.load = true;
+        this.subscription.add
+          (
+            this.service.genericoPost<IDetalleVenta, IRespuestaDTO<any>>
+              (UrlApiREST.VENTA_DETALLE_GUARDAR, detalleVenta)
+              .subscribe((res) => {
+                console.log(res, ' pasando');
+                let codigoRespuesta: IMensajeRespuesta = null as any;
+                let mostrarMensaje: string = null as any;
+
+                if (res.code === '200 OK') {
+                  this.load = false;
+                  codigoRespuesta = MensajeFactory.obtenereMensaje(res.codeValue);
+                  mostrarMensaje = codigoRespuesta.mostrarMensaje(res);
+
+                  Mensaje.mensaje('Mensaje', `${mostrarMensaje}`, 'success', 'Aceptar');
+
+                  // this.datosVentaFormGroup.reset();
+                  this.realizarVentaMostrar = false;
+                  this.pedidoVenta = false;
+                  this.ventaMostrar = false;
+                  this.carrito = {};
+                  this.detalleCarrito = [];
+                  this.prodModel = InicializarVenta.incializarProducto;
+                  this.bloquearDetalle = false;
+                  this.cantidadVenta = '';
+                  this.usuarioModel = InicializarUsuario.inicializarUsuarioRespuesta;
+                  this.clienteModel = Cliente.incializarCliente;
+                  this.datosVentaFormGroup.get('usuarioVenta')?.setValue(this.usuarioModel);
+                  this.datosVentaFormGroup.get('clienteVenta')?.setValue(this.clienteModel);
+                  this.datosVentaFormGroup.get('totalVenta')?.setValue('');
+                  this.datosVentaFormGroup.get('pagarCon')?.setValue('');
+                  this.datosVentaFormGroup.get('cambio')?.setValue('');
+
+
+                  this.cargarProducto();
+
+                } else {
+                  this.load = false;
+                  Mensaje.mensaje('Mensaje', `Error al guardar un cliente`, 'success', 'Aceptar');
+                }
+
+
+              }, (error) => {
+
+                this.load = false;
+              }));
+
+
+
       } else {
         Mensaje.mensaje('Mensaje', 'Datos incompletosadmin', 'info', 'Aceptar');
       }
     }
 
-  }
-  guardarRealizarPago(): void {
+
 
   }
 
@@ -179,25 +388,7 @@ this.cargarClientes();
     }, (err: any) => { });
   }
 
-  keyworda = 'nombreProducto';
 
-  keywordUsuario = 'nombreUsuario';
-  dataUsuario: Array<IUsuarioRespuesta> = [];
-
-
-  keywordCliente = 'nombreCliente';
-  dataCliente: Array<any> = [];
-
-  data = [
-    {
-      id: 1,
-      name: 'Usa'
-    },
-    {
-      id: 2,
-      name: 'England'
-    }
-  ];
 
   agregarVenta(cantidad: string): void {
 
@@ -217,9 +408,6 @@ this.cargarClientes();
               let deta = this.detalleCount(this.detalle, producto, parseFloat(cantidad));
               this.bloquearDetalle = true;
             }
-
-
-
           }, (error: any) => { }));
     } else {
       Mensaje.mensaje('Mensaje', 'Datos incompletos', 'warning', 'Aceptar');
@@ -256,6 +444,9 @@ this.cargarClientes();
     cantidad: number): IDetalleVentaMostrar {
 
     const id = producto.id !== undefined && producto.id !== null ? producto.id : 0;
+    let prodADetalle: IProducto = InicializarVenta.incializarProducto;
+
+
     const producto2 = {
       nombreProducto: producto.nombreProducto,
       precioProducto: producto.precioProducto,
@@ -297,6 +488,8 @@ this.cargarClientes();
 
     this.iProducto = [];
     this.cargarProducto();
+
+ 
   }
 
   onChangeSearch(val: string) {
@@ -313,48 +506,63 @@ this.cargarClientes();
 
   realizarPedido(): void {
     if (Object.values(this.carrito).length > 0) {
-      let usuario: IUsuario =
-      {
-        id: 18,
-        contrasenaUsuario: '',
-        nombreUsuario: '',
-      }
-      this.subscription.add
-        (this.service.genericoPost<IUsuario, IRespuestaDTO<IClienteUsuario>>
-          (UrlApiREST.OBTENER_CLIENTE_USUARIO, usuario).subscribe((res) => {
-            console.log(res, ' cliente');
-            if (res.t.cliente === null) {
-              Swal.fire({
-                icon: 'error',
-                title: 'Oops...',
-                text: `${res.mensaje}`,
-                footer: `<a href="clientes">Resgistrar el cliente</a>`
-              });
-            } else {
-            
-              this.cargarUsuarios();
-              this.cargarClientes();
-              let totVenta: number = 0;
-              Object.values(this.carrito).forEach( (m: any) => {
-                totVenta += m.subtotalProducto
-              });
-              this.datosVentaFormGroup.get('totalVenta')?.setValue(`$${totVenta}`);
-              Mensaje.mensaje('Mensaje', `${res.mensaje}`, 'success', 'Aceptar');
-              this.ventaMostrar = true;
-              this.realizarVentaMostrar = true;
-            }
-          }, (error: any) => { }));
-    } else {
-      Mensaje.mensaje('Mensaje', `Campos incompletos`, 'warning', 'Aceptar');
-    }
 
+      if( this.usuarioSesion !== null )
+      {
+        let usuario: IUsuario =
+        {
+          id: this.usuarioSesion[0].id,
+          contrasenaUsuario: '',
+          nombreUsuario: '',
+        }
+        this.subscription.add
+          (this.service.genericoPost<IUsuario, IRespuestaDTO<IClienteUsuario>>
+            (UrlApiREST.OBTENER_CLIENTE_USUARIO, usuario).subscribe((res) => {
+
+              console.log(res, '; de nuevo');
+              if (res.t.cliente === null) {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Oops...',
+                  text: `${res.mensaje}`,
+                  footer: `<a href="clientes">Resgistrar el cliente</a>`
+
+                });
+                
+              } else {
+                this.cargarUsuarios();
+                this.cargarClientes();
+                let totVenta: number = 0;
+  
+                Object.values(this.carrito).forEach((m: any) => {
+                  let productoCarrito: IProducto =
+                  {
+                    id: m.id,
+                    nombreProducto: m.nombreProducto,
+                    precioProducto: m.precioProducto,
+                    descripcionProducto: '',
+                    kiloProducto: m.cantidadProducto
+                  }
+                  this.nuevoCarrito.push(productoCarrito);
+  
+                  totVenta += m.subtotalProducto
+                });
+                this.datosVentaFormGroup.get('totalVenta')?.setValue(`$${totVenta}`);
+                Mensaje.mensaje('Mensaje', `${res.mensaje}`, 'success', 'Aceptar');
+                this.ventaMostrar = true;
+                this.realizarVentaMostrar = true;
+              }
+            }, (error: any) => { }));
+      } else {
+        Mensaje.mensaje('Mensaje', `Campos incompletos`, 'warning', 'Aceptar');
+      }
+      }
   }
   mostrarBloqueoVenta(): void {
     this.subscription.add
       (this.service.genericoGet<Array<IPedidoVenta>>
         (UrlApiREST.OBTENER_PEDIDO_VENTA)
         .subscribe((pedido) => {
-          console.log(pedido, 'ped');
           const pedidoDoble: IPedidoVenta = pedido[0];
           this.pedidoVenta = pedidoDoble.estatus === 'pedido' ? true : false;
         }, (error: any) => { }));
@@ -405,28 +613,26 @@ this.cargarClientes();
         }, (error: any) => { }));
   }
 
-  cargarUsuarios(): void
-  {
-this.subscription.add(this.service.genericoGet<IRespuestaDTO<Array<IUsuarioRespuesta>>>(UrlApiREST.OBTENER_USUARIOS).subscribe((res)=>{
-  console.log(res, ' resesas')
-  this.dataUsuario = res.t;
-},(error)=>{}));
+  cargarUsuarios(): void {
+    this.subscription.add(this.service.genericoGet<IRespuestaDTO<Array<IUsuarioRespuesta>>>(UrlApiREST.OBTENER_USUARIOS).subscribe((res) => {
+      console.log(res, ' resesas')
+      this.dataUsuario = res.t;
+    }, (error) => { }));
   }
-  cargarClientes(): void
-  {
-this.subscription.add(this.service.genericoGet<IRespuestaDTO<Array<IClienteDTO>>>(UrlApiREST.OBTENER_CLIENTES).subscribe((res)=>{
-  
-  this.dataCliente = res.t.map((m)=>{
-    let dato: any = {
-      id: m.id,
-      nombreCliente: m.nombre
-    }
-    return dato;
-  });
-  
-  console.log(this.dataCliente, ' cliente ', this.data);
+  cargarClientes(): void {
+    this.subscription.add(this.service.genericoGet<IRespuestaDTO<Array<IClienteDTO>>>(UrlApiREST.OBTENER_CLIENTES).subscribe((res) => {
 
-},(error)=>{}));
+      this.dataCliente = res.t.map((m) => {
+        let dato: any = {
+          id: m.id,
+          nombreCliente: m.nombre
+        }
+        return dato;
+      });
+
+      console.log(this.dataCliente, ' cliente ', this.data);
+
+    }, (error) => { }));
   }
 
   ngOnDestroy(): void {

@@ -125,7 +125,9 @@
                         [searchKeyword]="keywordUsuario" 
                         formControlName="usuarioVenta"
                             [itemTemplate]="itemTemplate" 
-                            [notFoundTemplate]="notFoundTemplate" >
+                            [notFoundTemplate]="notFoundTemplate" 
+                            
+                            >
                         </ng-autocomplete>
 
                         <ng-template #itemTemplate let-item>
@@ -250,14 +252,13 @@
                 </div>
 
                 <div class="row mt-3">
-
                     <div class="col-6 d-flex justify-content-end">
-                        <button class="btn btn-success" *ngIf="this.permisosMostrar.includes(4)" (click)="btnRealizarPedidoVenta();" [disabled]="!disabledRelizarPedidoVenta" type="button">{{ realizarPedidoVenta }}</button>
+                        <button class="btn btn-success" *ngIf="permisosMostrar.includes(4)" (click)="btnRealizarPedidoVenta();" [disabled]="!disabledRelizarPedidoVenta" type="button">{{ realizarPedidoVenta }}</button>
                     </div>
 
 
                     <div class="col-6 d-flex justify-content-end">
-                        <button class="btn btn-success" type="submit" *ngIf="this.permisosMostrar.includes(5)" [disabled]="!datosVentaFormGroup.valid" >{{ realizarPago }}</button>
+                        <button class="btn btn-success" type="submit" *ngIf="permisosMostrar.includes(5)" [disabled]="!datosVentaFormGroup.valid" >{{ realizarPago }}</button>
                     </div>
                 </div>
 

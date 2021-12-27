@@ -3,7 +3,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http
 import { EventEmitter, Injectable } from '@angular/core';
 import { Observable,throwError } from 'rxjs';
 import { catchError, map, retry } from 'rxjs/operators';
-import { ICliente, IDatosMostrar, IPermisos, IRespuestaDTO, IUsuarioRespuesta, IVista, IVistaCheck } from '../models';
+import { ICliente, IClienteUsuario, IDatosMostrar, IPermisos, IRespuestaDTO, IUsuarioRespuesta, IVista, IVistaCheck } from '../models';
 import { IProducto, IProductoPersonalizado } from '../views/models';
 
 @Injectable({
@@ -94,7 +94,7 @@ export class ServicesGenericosService {
     );
   }
 
-  guardarCliente(url: string, cliente: ICliente ): Observable<IRespuestaDTO<ICliente>>{
+  guardarCliente(url: string, cliente: IClienteUsuario ): Observable<IRespuestaDTO<ICliente>>{
     return this.http.post<IRespuestaDTO<ICliente>>(`${this.url}/${url}`, cliente).pipe(
       retry(2),
       catchError(this.handleError)

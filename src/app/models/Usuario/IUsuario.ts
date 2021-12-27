@@ -10,6 +10,11 @@ export class InicializarUsuario
         contrasenaUsuario: '',
         permisos: []
     }
+	public static inicializarUsuarioRespuesta: IUsuarioRespuesta =
+    {
+        nombreUsuario: '',
+        permisos: []
+    }
 
 	public static registrarUsuario: IRegistrarUsuario =
     {

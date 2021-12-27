@@ -1,4 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { IPermisos, IUsuarioRespuesta, Permisos } from 'src/app/models';
 import { ServicesGenericosService } from 'src/app/service/services-genericos.service';
@@ -20,9 +21,13 @@ export class NavComponent implements OnInit, OnDestroy {
 
   permisosMostrar: Array<number> = [];
   tipoUsuario: string = '';
-
+  usuarioSesion: Array<IUsuarioRespuesta> = [];
   usuarioNav: string = '';
-  constructor( private service: ServicesGenericosService ) { 
+
+
+  constructor( private service: ServicesGenericosService,
+    private ngZone: NgZone,
+    private router: Router ) { 
     this.subscription = new Subscription();
   }
  
@@ -33,11 +38,24 @@ export class NavComponent implements OnInit, OnDestroy {
 
     this.permisosMostrar = Permisos.localStorageSession( localStorage.getItem("session") as any);
     this.usuarioNav = Permisos.userNav( localStorage.getItem("session") as any);
+    
+    this.usuarioSesion = localStorage.getItem("session") as any;
+
     this.tipoUsuario = Permisos.tipoUsuario(this.permisosMostrar);
     
   }
 
+  salir(event: any): void
+  {
+    event.preventDefault();
+    localStorage.removeItem('session');
+    this.ngZone.run(()=>{
+      this.tipoUsuario = '';
+      this.permisosMostrar = [];
+      this.usuarioNav = '';
+      this.router.navigate(['sistema']);});
 
+  }
   obtenerPermisos(): void
   {
     this.subscription.add(this.service.permisos$.subscribe((res)=>{

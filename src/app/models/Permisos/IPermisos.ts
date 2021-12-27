@@ -46,7 +46,6 @@ export class Permisos {
 
         if( tipo.length > 0)
         {
- 
             if( tipo.includes(1) && tipo.includes(2) && 
             tipo.includes(3) && tipo.includes(4) && 
             tipo.includes(5) && tipo.includes(6) )

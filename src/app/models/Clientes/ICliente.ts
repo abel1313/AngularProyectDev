@@ -1,4 +1,5 @@
 
+import { IUsuarioRespuesta } from "..";
 import { IBase } from "./IBase";
 import { IDireccion } from "./IDireccion";
 import { IPersona } from "./IPersona";
@@ -7,8 +8,14 @@ import { IPersona } from "./IPersona";
 export interface ICliente extends IBase
 {
     personaCliente: IPersona;
-
 }
+
+export interface IClienteUsuario extends IBase
+{
+    personaCliente: IPersona;
+    usuario: IUsuarioRespuesta;
+}
+
 
 export interface IClienteDTO
 {
@@ -19,9 +26,36 @@ export interface IClienteDTO
 
 }
 
+export interface IBuscarId
+{
+    id: number;
+}
+
 
 export class Cliente{
 
+    public static inicializarClienteUsuario: IClienteUsuario =
+    {
+        personaCliente: {
+            nombrePersona: '',
+            apeidoPaternoPersona: '',
+            apeidoMaternoPersona: '',
+            generoPersona: '',
+            fechaNacimiento: '',
+            direccion: {
+                estadoDireccion:       '',
+                calleDireccion:        '',
+                coloniaDireccion:      '',
+                codigoPostalDireccion: '',
+                numeroInterior: '',
+                numeroExterior: '',
+            }
+        },
+        usuario: {
+            nombreUsuario: '',
+            permisos: []
+        }
+    }
     public static inicializarIMostrarDatos =
     {
     id: 0,

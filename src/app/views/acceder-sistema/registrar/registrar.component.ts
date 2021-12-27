@@ -21,8 +21,10 @@ export class RegistrarComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    
         this.permisosMostrar = Permisos.localStorageSession(localStorage.getItem("session") as any);
     if (this.permisosMostrar.length > 0) {
+      console.log(' ;;leha');
       this.ngZone.run(() => { this.router.navigate(['/venta']) });
     }
   }

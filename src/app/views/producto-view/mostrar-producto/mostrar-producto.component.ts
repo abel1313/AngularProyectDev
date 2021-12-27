@@ -31,6 +31,11 @@ export class MostrarProductoComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
 
       this.permisosMostrar = Permisos.localStorageSession(localStorage.getItem("session") as any);
+      
+      if( !this.permisosMostrar.includes(1) )
+      {
+        this._ngZone.run(() => { this.router.navigate(['/venta']) });
+      }
     if (this.permisosMostrar.length === 0) {
       this._ngZone.run(() => { this.router.navigate(['/sistema']) });
     }

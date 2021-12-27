@@ -1,4 +1,4 @@
-{{ fecha | pipeFecha }}
+
 <form [formGroup]='datosClienteFormGroup'(ngSubmit)='guardar()' *ngIf="!mostrarFormularios">
   <div class="row">
     <div class="col-8 offset-2">
@@ -217,7 +217,7 @@
               </div>
 
               <div class="text-center" 
-              *ngIf="datosClienteDireccionFormGroup.get('calleDireccion')?.errors?.maxlIngrese su estado.ength">
+              *ngIf="datosClienteDireccionFormGroup.get('calleDireccion')?.errors?.maxlength">
                 El maximo de caracteres es de 10.
             </div>
 

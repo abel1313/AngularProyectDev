@@ -2,7 +2,7 @@ import { Component, Input, NgZone, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { Cliente, ICliente, IDatosMostrar, IMensajeRespuesta, IRespuestaDTO, MensajeFactory, Permisos, UrlApiREST } from 'src/app/models';
+import { Cliente, ICliente, IClienteUsuario, IDatosMostrar, IMensajeRespuesta, InicializarUsuario, IRespuestaDTO, MensajeFactory, Permisos, UrlApiREST } from 'src/app/models';
 import { IDireccion } from 'src/app/models/Clientes/IDireccion';
 import { IPersona } from 'src/app/models/Clientes/IPersona';
 import { ServicesGenericosService } from 'src/app/service/services-genericos.service';
@@ -155,15 +155,14 @@ this.obtenerClienteEditar();
 
   guardarDireccion(): void {
 
+    let usuarioCliente: IClienteUsuario = InicializarUsuario.inicializarClienteUsuario;
     let cliente: ICliente=  Cliente.incializarCliente;
-
     let persona: IPersona = this.datosClienteFormGroup.value;
     persona.fechaNacimiento = new PipeFechaPipe().transform(new Date(this.datosClienteFormGroup.get('fechaNacimiento')?.value));
-
     let iDireccion: IDireccion = (this.datosClienteDireccionFormGroup.value);
     persona.direccion = iDireccion;
+
     
- 
 
     if( this.tituloCliente === 'Editar Cliente' )
     {
@@ -174,18 +173,27 @@ this.obtenerClienteEditar();
       }
     }else
     {
+
+      if( localStorage.getItem('session') !== null )
+      {
+      
+        usuarioCliente.usuario = (JSON.parse(localStorage.getItem('session') as any))[0];
+        let permi: Array<number> = Permisos.localStorageSession(localStorage.getItem('session') as any);
+
+        if( Permisos.tipoUsuario(permi ) === 'admin' )
+        {
+          usuarioCliente.usuario.id = 0;  
+        }
+      }
       cliente = 
       {
         id: 0,
         personaCliente: persona,
       }
+      usuarioCliente.cliente = cliente;
     }
-    this.guardarCliente(cliente);
+    this.guardarCliente(usuarioCliente);
   }
-
-
-
-
 
   ediarCliente(cliente : ICliente): void
   {
@@ -213,8 +221,9 @@ this.obtenerClienteEditar();
       
       console.log(err, ' ERRRROOOOOORRR')}); 
   }
-  guardarCliente( cliente: ICliente): void
+  guardarCliente( cliente: IClienteUsuario): void
   {
+    console.log(cliente, ' cliente');
       this.service.guardarCliente(UrlApiREST.GUARDAR_CLIENTE, cliente).subscribe((res)=>{
       
         let codigoRespuesta: IMensajeRespuesta = null as any;
