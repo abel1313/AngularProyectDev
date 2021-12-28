@@ -15,8 +15,8 @@ export class ServicesGenericosService {
   private host: string = 'tortillerialuvianos.herokuapp.com';
   private port: string = '5432';
 
-  // url = `https://${this.host}/proyecto`;
-  url: string = 'http://localhost:8080/proyecto';
+  url = `https://${this.host}/proyecto`;
+  // url: string = 'http://localhost:8080/proyecto';
 
   editarProducto$ = new EventEmitter<string>();
   editarProductoAgregar$ = new EventEmitter<IProducto>();
