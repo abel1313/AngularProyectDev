@@ -67,6 +67,9 @@ export class MostrarPedidosComponent implements OnInit, OnDestroy, AfterViewInit
   cargarPedidos(): void {
     this.subscription.add(this.service.genericoGet<IRespuestaDTO<Array<IResponsePedido>>>(UrlApiREST.OBTENER_PEDIDO)
       .subscribe((res) => {
+        console.log(res, ' total');
+
+        
         this.iResponsePedido = res.t;
 
 
@@ -77,10 +80,10 @@ export class MostrarPedidosComponent implements OnInit, OnDestroy, AfterViewInit
       }, err => console.log(err)));
   }
 
-  editarPedido(intem: IResponsePedido): void {
+  entregarPedido(intem: IResponsePedido): void {
 
   }
-  eliminarPedido(intem: IResponsePedido): void {
+  cancelarPedido(intem: IResponsePedido): void {
 
   }
 

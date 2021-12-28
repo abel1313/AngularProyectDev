@@ -5,12 +5,14 @@ import { UsuarioViewRoutingModule } from './usuario-view-routing.module';
 import { MostrarUsuariosComponent } from './mostrar-usuarios/mostrar-usuarios.component';
 import { AgregarEditarUsuariosComponent } from './agregar-editar-usuarios/agregar-editar-usuarios.component';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { UsuariosComponent } from './usuarios/usuarios.component';
 
 
 @NgModule({
   declarations: [
     MostrarUsuariosComponent,
-    AgregarEditarUsuariosComponent
+    AgregarEditarUsuariosComponent,
+    UsuariosComponent
   ],
   imports: [
     CommonModule,

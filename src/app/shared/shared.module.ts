@@ -17,14 +17,21 @@ import { Patron } from './Patron';
 import { PipeFechaPersonalizadaPipe } from './pipe-fecha-personalizada.pipe';
 import {AutocompleteLibModule} from 'angular-ng-autocomplete';
 import { PipeNumerosPipe } from './pipe-numeros.pipe';
+import { PipeKilosPipe } from './pipe-kilos.pipe';
+
+
+const datos: any = 
+[
+  PipeFechaPipe, 
+  PipeFechaPersonalizadaPipe, 
+  PipeNumerosPipe, 
+  PipeKilosPipe,
+];
 
 
 @NgModule({
   declarations: [ 
-    
-    PipeFechaPipe, 
-    PipeFechaPersonalizadaPipe, 
-    PipeNumerosPipe,
+...datos
   ],
   imports: [
     CommonModule,
@@ -59,7 +66,8 @@ import { PipeNumerosPipe } from './pipe-numeros.pipe';
     PipeFechaPipe,
     PipeFechaPersonalizadaPipe,
     AutocompleteLibModule,
-    PipeNumerosPipe
+    PipeNumerosPipe,
+    PipeKilosPipe
     
     
   ]

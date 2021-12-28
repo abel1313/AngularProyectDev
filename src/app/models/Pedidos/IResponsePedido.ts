@@ -8,6 +8,7 @@ export interface IResponsePedido
     estatusPedido: string;
     venta: IVenta;
     usuario: IUsuarioRespuesta;
+    totalKilos: number
 
 
 }

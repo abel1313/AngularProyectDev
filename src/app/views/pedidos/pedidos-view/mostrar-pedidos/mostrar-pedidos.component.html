@@ -8,6 +8,7 @@
             <th>Fecha pedido</th>
             <th>Cliente</th>
             <th>Usuario que lo atendio</th>
+            <th>Kilos</th>
             <th>Acción</th>
           </tr>
         </thead>
@@ -20,11 +21,12 @@
                 {{ item.venta.cliente.personaCliente.apeidoMaternoPersona  | uppercase}}  
             </td>
             <td>{{ item.usuario.nombreUsuario }}</td>
+            <td>{{ item.totalKilos | pipeKilos }}</td>
             
              <td>
                
-              <button class="btn btn-info col-6"  (click)="editarPedido(item);" >editar</button>
-              <button class="btn btn-warning col-6" (click)="eliminarPedido(item);">eliminar</button> 
+              <button class="btn btn-info col-6"  (click)="entregarPedido(item);" >Entrgar</button>
+              <button class="btn btn-warning col-6" (click)="cancelarPedido(item);">Cancelar</button> 
 
             </td>
           </tr>

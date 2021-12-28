@@ -64,6 +64,8 @@ export class NavComponent implements OnInit, OnDestroy {
       this.permisos = res[0].permisos;
 
      this.permisosMostrar = Permisos.mapPermisos(this.permisos);
+     
+    this.tipoUsuario = Permisos.tipoUsuario(this.permisosMostrar);
       
       console.log(this.permisosMostrar, ' name');
 

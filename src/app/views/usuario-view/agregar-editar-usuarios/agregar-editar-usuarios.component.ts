@@ -57,12 +57,7 @@ export class AgregarEditarUsuariosComponent implements OnInit, OnDestroy {
   
       this.ocultarPermisos = this.router.url === '/sistema/registrar' ? true : false;
   
-      if (this.enviarUsuarioEditar !== null) {
-        if (this.enviarUsuarioEditar !== null && this.enviarUsuarioEditar !== undefined) {
-          this.datosUsuarioFormGroup.get('nombreUsuario')?.setValue(this.enviarUsuarioEditar.nombreUsuario);
-        }
-  
-      }
+
       this.cargarVistas();
     }
     this.datosUsuarioFormGroup = this.fb.group({
@@ -72,6 +67,14 @@ export class AgregarEditarUsuariosComponent implements OnInit, OnDestroy {
     });
   
 
+    if (this.enviarUsuarioEditar !== null) {
+      if (this.enviarUsuarioEditar !== null && this.enviarUsuarioEditar !== undefined) {
+        this.datosUsuarioFormGroup.get('nombreUsuario')?.setValue(this.enviarUsuarioEditar.nombreUsuario);
+        console.log(' llego ', this.permisosMostrar);
+        
+      }
+
+    }
   }
 
 

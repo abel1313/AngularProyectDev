@@ -31,7 +31,11 @@
 <ng-template #sinPermisos> <td>No cuenta con permisos</td> </ng-template>
 
 
-<app-agregar-editar-usuarios *ngIf="mostrarAgregarUsuario"
+<div class="row">
+  <div class="col-6 offset-3">
+    <app-agregar-editar-usuarios *ngIf="mostrarAgregarUsuario"
   [enviarUsuarioEditar]="usuarioEditar"
 ></app-agregar-editar-usuarios>
+  </div>
+</div>
 
